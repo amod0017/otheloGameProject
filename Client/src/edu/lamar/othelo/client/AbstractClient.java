@@ -2,10 +2,14 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com
 
-package ocsf.client;
+package edu.lamar.othelo.client;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * The <code> AbstractClient </code> contains all the methods necessary to set
@@ -21,7 +25,7 @@ import java.net.*;
  * <p>
  * Project Name: OCSF (Object Client-Server Framework)
  * <p>
- * 
+ *
  * @author Dr. Robert Lagani&egrave;re
  * @author Dr. Timothy C. Lethbridge
  * @author Fran&ccedil;ois B&eacutel;langer
@@ -35,7 +39,7 @@ public abstract class AbstractClient implements Runnable {
 	/**
 	 * Sockets are used in the operating system as channels of communication
 	 * between two processes.
-	 * 
+	 *
 	 * @see java.net.Socket
 	 */
 	private Socket				clientSocket;
@@ -75,13 +79,13 @@ public abstract class AbstractClient implements Runnable {
 
 	/**
 	 * Constructs the client.
-	 * 
+	 *
 	 * @param host
 	 *            the server's host name.
 	 * @param port
 	 *            the port number.
 	 */
-	public AbstractClient(String host, int port) {
+	public AbstractClient(final String host, final int port) {
 		// Initialize variables
 		this.host = host;
 		this.port = port;
@@ -92,27 +96,28 @@ public abstract class AbstractClient implements Runnable {
 	/**
 	 * Opens the connection with the server. If the connection is already
 	 * opened, this call has no effect.
-	 * 
+	 *
 	 * @exception IOException
 	 *                if an I/O error occurs when opening.
 	 */
 	final public void openConnection() throws IOException {
 		// Do not do anything if the connection is already open
-		if (isConnected())
+		if (isConnected()) {
 			return;
+		}
 
 		// Create the sockets and the data streams
 		try {
 			clientSocket = new Socket(host, port);
 			output = new ObjectOutputStream(clientSocket.getOutputStream());
 			input = new ObjectInputStream(clientSocket.getInputStream());
-		} catch (IOException ex)
+		} catch (final IOException ex)
 		// All three of the above must be closed when there is a failure
 		// to create any of them
 		{
 			try {
 				closeAll();
-			} catch (Exception exc) {
+			} catch (final Exception exc) {
 			}
 
 			throw ex; // Rethrow the exception.
@@ -126,15 +131,16 @@ public abstract class AbstractClient implements Runnable {
 	/**
 	 * Sends an object to the server. This is the only way that methods should
 	 * communicate with the server.
-	 * 
+	 *
 	 * @param msg
 	 *            The message to be sent.
 	 * @exception IOException
 	 *                if an I/O error occurs when sending
 	 */
-	final public void sendToServer(Object msg) throws IOException {
-		if (clientSocket == null || output == null)
+	final public void sendToServer(final Object msg) throws IOException {
+		if ((clientSocket == null) || (output == null)) {
 			throw new SocketException("socket does not exist");
+		}
 
 		output.writeObject(msg);
 	}
@@ -142,15 +148,15 @@ public abstract class AbstractClient implements Runnable {
 	/**
 	 * Reset the object output stream so we can use the same
 	 * buffer repeatedly. This would not normally be used, but is necessary
-    * in some circumstances when Java refuses to send data that it thinks has been sent.
+	 * in some circumstances when Java refuses to send data that it thinks has been sent.
 	 */
 	final public void forceResetAfterSend() throws IOException {
-      output.reset();
+		output.reset();
 	}
 
 	/**
 	 * Closes the connection to the server.
-	 * 
+	 *
 	 * @exception IOException
 	 *                if an I/O error occurs when closing.
 	 */
@@ -172,7 +178,7 @@ public abstract class AbstractClient implements Runnable {
 	 * @return true if the client is connnected.
 	 */
 	final public boolean isConnected() {
-		return clientReader != null && clientReader.isAlive();
+		return (clientReader != null) && clientReader.isAlive();
 	}
 
 	/**
@@ -185,11 +191,11 @@ public abstract class AbstractClient implements Runnable {
 	/**
 	 * Sets the server port number for the next connection. The change in port
 	 * only takes effect at the time of the next call to openConnection().
-	 * 
+	 *
 	 * @param port
 	 *            the port number.
 	 */
-	final public void setPort(int port) {
+	final public void setPort(final int port) {
 		this.port = port;
 	}
 
@@ -203,17 +209,17 @@ public abstract class AbstractClient implements Runnable {
 	/**
 	 * Sets the server host for the next connection. The change in host only
 	 * takes effect at the time of the next call to openConnection().
-	 * 
+	 *
 	 * @param host
 	 *            the host name.
 	 */
-	final public void setHost(String host) {
+	final public void setHost(final String host) {
 		this.host = host;
 	}
 
 	/**
 	 * returns the client's description.
-	 * 
+	 *
 	 * @return the client's Inet address.
 	 */
 	final public InetAddress getInetAddress() {
@@ -226,6 +232,7 @@ public abstract class AbstractClient implements Runnable {
 	 * Waits for messages from the server. When each arrives, a call is made to
 	 * <code>handleMessageFromServer()</code>. Not to be explicitly called.
 	 */
+	@Override
 	final public void run() {
 		connectionEstablished();
 
@@ -245,11 +252,11 @@ public abstract class AbstractClient implements Runnable {
 				// msg by implementing the following method
 				handleMessageFromServer(msg);
 			}
-		} catch (Exception exception) {
+		} catch (final Exception exception) {
 			if (!readyToStop) {
 				try {
 					closeAll();
-				} catch (Exception ex) {
+				} catch (final Exception ex) {
 				}
 
 				connectionException(exception);
@@ -274,11 +281,11 @@ public abstract class AbstractClient implements Runnable {
 	 * Hook method called each time an exception is thrown by the client's
 	 * thread that is waiting for messages from the server. The method may be
 	 * overridden by subclasses.
-	 * 
+	 *
 	 * @param exception
 	 *            the exception raised.
 	 */
-	protected void connectionException(Exception exception) {
+	protected void connectionException(final Exception exception) {
 	}
 
 	/**
@@ -292,7 +299,7 @@ public abstract class AbstractClient implements Runnable {
 	/**
 	 * Handles a message sent from the server to this client. This MUST be
 	 * implemented by subclasses, who should respond to messages.
-	 * 
+	 *
 	 * @param msg
 	 *            the message sent.
 	 */
@@ -302,23 +309,26 @@ public abstract class AbstractClient implements Runnable {
 
 	/**
 	 * Closes all aspects of the connection to the server.
-	 * 
+	 *
 	 * @exception IOException
 	 *                if an I/O error occurs when closing.
 	 */
 	private void closeAll() throws IOException {
 		try {
 			// Close the socket
-			if (clientSocket != null)
+			if (clientSocket != null) {
 				clientSocket.close();
+			}
 
 			// Close the output stream
-			if (output != null)
+			if (output != null) {
 				output.close();
+			}
 
 			// Close the input stream
-			if (input != null)
+			if (input != null) {
 				input.close();
+			}
 		} finally {
 			// Set the streams and the sockets to NULL no matter what
 			// Doing so allows, but does not require, any finalizers
