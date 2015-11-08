@@ -224,6 +224,7 @@ public class ConnectionToClient extends Thread {
 				server.receiveMessageFromClient(msg, this);
 			}
 		} catch (final Exception exception) {
+			exception.printStackTrace();
 			if (!readyToStop) {
 				try {
 					closeAll();
