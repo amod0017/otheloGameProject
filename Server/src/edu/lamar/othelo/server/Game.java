@@ -15,13 +15,12 @@ class Game {
 	int black_score;
 
 	// constructor for Othello's starting position
-	Game(final User w, final User b) {
-		white = w;
-		black = b;
-
+	// FIXME: add gameId to game.
+	Game(final User whitePlayer, final User blackPlayer) {
+		white = whitePlayer;
+		black = blackPlayer;
 		white_score = 2;
 		black_score = 2;
-
 		board[3][3] = true;
 		board[4][4] = true;
 		board[4][3] = false;
