@@ -66,6 +66,7 @@ public class ConnectionToClient extends Thread {
 	 * servers will want to store many different types of information about each
 	 * client. Used by the setInfo and getInfo methods.
 	 */
+	@SuppressWarnings("rawtypes")
 	private final HashMap savedInfo = new HashMap(10);
 
 	// CONSTRUCTORS *****************************************************
@@ -186,6 +187,7 @@ public class ConnectionToClient extends Thread {
 	 * @param info
 	 *            the information itself.
 	 */
+	@SuppressWarnings("unchecked")
 	public void setInfo(final String infoType, final Object info) {
 		savedInfo.put(infoType, info);
 	}

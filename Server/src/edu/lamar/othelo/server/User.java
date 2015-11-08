@@ -1,3 +1,4 @@
+package edu.lamar.othelo.server;
 class User
 {
 	String name;

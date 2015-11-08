@@ -328,6 +328,7 @@ public abstract class AbstractServer implements Runnable
 
 					synchronized(this)
 					{
+						@SuppressWarnings("unused")
 						final ConnectionToClient c = new ConnectionToClient(
 								clientThreadGroup, clientSocket, this);
 					}
