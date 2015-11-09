@@ -68,11 +68,11 @@ public class GameServer extends AbstractServer {
 			port = DEFAULT_PORT; // 5555
 		}
 
-		final GameServer sv = new GameServer(port);
+		final GameServer gameServer = new GameServer(port);
 
 		try {
-			sv.listen(); // Start listening for connections
-			((ServerConsole) sv.serverConsole).accept();
+			gameServer.listen(); // Start listening for connections
+			((ServerConsole) gameServer.serverConsole).accept();
 		} catch (final Exception ex) {
 			System.out.println("ERROR - Could not listen for clients!");
 		}

@@ -252,12 +252,10 @@ public class ConnectionToClient extends Thread {
 			if (clientSocket != null) {
 				clientSocket.close();
 			}
-
 			// Close the output stream
 			if (output != null) {
 				output.close();
 			}
-
 			// Close the input stream
 			if (input != null) {
 				input.close();
