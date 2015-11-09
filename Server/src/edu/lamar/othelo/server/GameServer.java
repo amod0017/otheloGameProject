@@ -17,8 +17,8 @@ public class GameServer extends AbstractServer {
 
 	final public static int DEFAULT_PORT = 5555;
 	final private ChatIF serverConsole;
-	final private boolean isPlayerWaiting = false;
-	final private User playerWaiting = null;
+	private boolean isPlayerWaiting = false;
+	private User playerWaiting = null;
 	// FIXME int should be fixed with GameId class
 	final private Map<GameId, Game> ongoingGames = new HashMap<GameId, Game>();
 	public GameServer(final int port) {
@@ -39,13 +39,21 @@ public class GameServer extends AbstractServer {
 			if (isPlayerWaiting) {
 				ongoingGames.put(new GameId(playerWaiting,
 						getUser("get login id from message")), new Game(
-						playerWaiting, getUser("get login id from message")));
+								playerWaiting, getUser("get login id from message")));
 				try {
 					client.sendToClient("game started");
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}
+			} else {
+				isPlayerWaiting = true;
+				playerWaiting = getUser("login");
 			}
+		} else if (msg.toString().contains("make a move")) {
+			// 1. get the referred game.
+			// 2. check if valid.
+			// 3. update game.
+			// 4. send to client.
 		}
 
 	}
@@ -61,7 +69,6 @@ public class GameServer extends AbstractServer {
 	 */
 	public static void main(final String[] args) {
 		int port = 0;
-
 		try {
 			port = Integer.parseInt(args[0]);
 		} catch (final Throwable t) {
@@ -69,7 +76,6 @@ public class GameServer extends AbstractServer {
 		}
 
 		final GameServer gameServer = new GameServer(port);
-
 		try {
 			gameServer.listen(); // Start listening for connections
 			((ServerConsole) gameServer.serverConsole).accept();
