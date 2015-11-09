@@ -51,11 +51,21 @@ public class GameServer extends AbstractServer {
 			}
 		} else if (msg.toString().contains("make a move")) {
 			// 1. get the referred game.
-			// 2. check if valid.
-			// 3. update game.
+			if (ongoingGames.containsKey("game id")) {
+				final Game game = ongoingGames.get("game id");
+				// 2. check if valid.
+				if (true /* ideally we should check for a move here. */) {
+					// 3. update game.
+					game.makeMove(null);
+				}
+			}
 			// 4. send to client.
+			try {
+				client.sendToClient("move sucessful");
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	private User getUser(final String string) {
