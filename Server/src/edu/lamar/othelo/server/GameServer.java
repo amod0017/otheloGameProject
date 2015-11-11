@@ -19,8 +19,11 @@ public class GameServer extends AbstractServer {
 	final private ChatIF serverConsole;
 	private boolean isPlayerWaiting = false;
 	private User playerWaiting = null;
-	// FIXME int should be fixed with GameId class
+	private ConnectionToClient playerWaitingConnection = null;
 	final private Map<GameId, Game> ongoingGames = new HashMap<GameId, Game>();
+	final private Map<String, ConnectionToClient> connectedClient = new HashMap<String, ConnectionToClient>();
+
+	// FIXME: should be a singleton class.
 	public GameServer(final int port) {
 		super(port);
 		serverConsole = new ServerConsole(port, this);
@@ -32,23 +35,56 @@ public class GameServer extends AbstractServer {
 	@Override
 	protected void handleMessageFromClient(final Object msg, final ConnectionToClient client) {
 		// TODO a common message object needs to be created.
+		// parse message object and get request type.
+		final String requestType = getRequestType(msg);
+		if (requestType.equalsIgnoreCase("GAME")) {
+			final String request = getRequest(msg);
+			if(request.equalsIgnoreCase("START")){
+				if (isPlayerWaiting) {
+					ongoingGames.put(new GameId(playerWaiting,
+							getUser((String) msg)), new Game(
+									playerWaiting, getUser((String) msg)));
+					try {
+						final String playerColor = "black"; // since if player
+						// is waiting color
+						// will be black.
+						client.sendToClient("game-started_" + playerColor); // client
+						// should
+						// understand
+						// this
+						// and
+						// display
+						// the
+						// game
+						// UI.
+						playerWaitingConnection
+						.sendToClient("game-started_white");
+						playerWaiting = null; // Since now no player is waiting.
+						playerWaitingConnection = null;
+					} catch (final IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					isPlayerWaiting = true;
+					playerWaiting = getUser((String) msg);
+					playerWaitingConnection = client;
+				}
+			} else if (request.contains("MakeAMove")) {
+
+			} else if (request.equalsIgnoreCase("QUIT")) {
+				try {
+					client.sendToClient("Lost");
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
 		if (msg.toString().contains("login")) {
 			// code to read user and validate it using data access layer. Should
 			// be done latter.
 		} else if (msg.toString().contains("start a game")) {
-			if (isPlayerWaiting) {
-				ongoingGames.put(new GameId(playerWaiting,
-						getUser("get login id from message")), new Game(
-								playerWaiting, getUser("get login id from message")));
-				try {
-					client.sendToClient("game started");
-				} catch (final IOException e) {
-					e.printStackTrace();
-				}
-			} else {
-				isPlayerWaiting = true;
-				playerWaiting = getUser("login");
-			}
+
 		} else if (msg.toString().contains("make a move")) {
 			// 1. get the referred game.
 			if (ongoingGames.containsKey("game id")) {
@@ -66,6 +102,16 @@ public class GameServer extends AbstractServer {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private String getRequest(final Object msg) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String getRequestType(final Object msg) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private User getUser(final String string) {

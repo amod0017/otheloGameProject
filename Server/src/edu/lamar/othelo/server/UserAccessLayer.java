@@ -4,6 +4,7 @@ import java.io.File;
 
 class UserAccessLayer
 {
-	UserInfoFile file;
-	
+	// it will only have file.
+	File file;
+
 }
