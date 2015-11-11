@@ -4,17 +4,18 @@
 
 package edu.lamar.othelo.client;
 
+import java.io.IOException;
 
 
-public class GameClient extends AbstractClient 
+public class GameClient extends AbstractClient
 {
-	
-	private final static MAX_ARGS = 5;
-	
-	private String username, password;
-	private String[] serverArgs = new String[MAX_ARGS];
-	
-	//called upon the client logging in
+
+    private final static int MAX_ARGS = 5;
+
+    private String username, password;
+    private String[] serverArgs = new String[MAX_ARGS];
+
+    //called upon the client logging in
 	public GameClient(String username, String password,
 	String host, int port) throws IOException
 	{

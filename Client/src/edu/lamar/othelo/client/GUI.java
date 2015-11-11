@@ -21,20 +21,27 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.SwingUtilities;
 
+import edu.lamar.othelo.client.Chessboard;
+
 public class GUI {
-    public enum SpaceState {
-        empty, black, white
-    }
-    
     SpaceState[][] board = new SpaceState[8][8];
-    
-    
-    
     
     GUI ()
     {
-        initializeGUI();        
+        initializeGUI();
         drawBoard(board);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                GUI board = new GUI();
+            }
+        });
+    }
+
+    public static void drawBoard(SpaceState[][] gameBoard) {
+        Chessboard blah = new Chessboard(gameBoard);
     }
     
     public final void initializeGUI()
@@ -54,19 +61,9 @@ public class GUI {
     {
         board[row][column] = state;
     }
-    
-    
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run() {
-        GUI board = new GUI();      
-            }
-        });
-    }
-    
-    public static void drawBoard(SpaceState[][] gameBoard)
-    {
-        Chessboard blah = new Chessboard(gameBoard);            
+
+    public enum SpaceState {
+        empty, black, white
     }
     
 }
