@@ -67,11 +67,24 @@ public class GameServer extends AbstractServer {
 					}
 				} else {
 					isPlayerWaiting = true;
-					playerWaiting = getUser((String) msg);
+					playerWaiting = getUser((String) msg); // TODO: here it
+															// should be loginId
 					playerWaitingConnection = client;
 					connectedClient.put(getLoginId((String) msg), client);
 				}
 			} else if (request.contains("MakeAMove")) {
+				// TODO: remove not required comments after developer testing.
+				// find a game which it is requesting for by using the opponent
+				// game id.
+				// sample msg: rahul0017_game_MakeAMove-jason007 3,5 sample
+				// request: MakeAMove-jason007 3,5
+				final String[] splitedRequest = request.split("-");
+				System.out.println(splitedRequest); // printing for debugging
+													// purpose
+				// splitted requested: MakeAMove jason007 3,5"
+				final String oppositionPlayerLoginId = splitedRequest[1];
+				ongoingGames.get(getLoginId((String) msg) + "_"
+						+ oppositionPlayerLoginId);
 
 			} else if (request.equalsIgnoreCase("QUIT")) {
 				try {
