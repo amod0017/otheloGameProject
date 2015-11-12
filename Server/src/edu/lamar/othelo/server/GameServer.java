@@ -36,93 +36,112 @@ public class GameServer extends AbstractServer {
 	protected void handleMessageFromClient(final Object msg, final ConnectionToClient client) {
 		// TODO a common message object needs to be created.
 		// parse message object and get request type.
-		final String requestType = getRequestType(msg);
+		final String[] messageFromClient = ((String) msg).split("_"); // Since
+																		// "_"
+																		// will
+																		// be
+																		// the
+																		// seperator.
+		final String requestType = getRequestType(messageFromClient);
 		if (requestType.equalsIgnoreCase("GAME")) {
-			final String request = getRequest(msg);
-			if(request.equalsIgnoreCase("START")){
-				if (isPlayerWaiting) {
-					ongoingGames.put(new GameId(playerWaiting,
-							getUser((String) msg)), new Game(
-									playerWaiting, getUser((String) msg)));
-					try {
-						final String playerColor = "black"; // since if player
-						// is waiting color
-						// will be black.
-						client.sendToClient("game-started_" + playerColor); // client
-						// should
-						// understand
-						// this
-						// and
-						// display
-						// the
-						// game
-						// UI.
-						playerWaitingConnection
-						.sendToClient("game-started_white");
-						connectedClient.put(getLoginId((String) msg), client);
-						playerWaiting = null; // Since now no player is waiting.
-						playerWaitingConnection = null;
-					} catch (final IOException e) {
-						e.printStackTrace();
-					}
-				} else {
-					isPlayerWaiting = true;
-					playerWaiting = getUser((String) msg); // TODO: here it
-					// should be loginId
-					playerWaitingConnection = client;
-					connectedClient.put(getLoginId((String) msg), client);
-				}
-			} else if (request.contains("MakeAMove")) {
-				// TODO: remove not required comments after developer testing.
-				// find a game which it is requesting for by using the opponent
-				// game id.
-				// sample msg: rahul0017_game_MakeAMove-jason007 3,5 sample
-				// request: MakeAMove-jason007 3,5
-				final String[] splitedRequest = request.split("-");
-				System.out.println(splitedRequest); // printing for debugging
-				// purpose
-				// splitted requested: MakeAMove jason007 3,5"
-				final String oppositionPlayerLoginId = splitedRequest[1];
-				final Game ongoingGame = ongoingGames.get(getLoginId((String) msg) + "_"
-						+ oppositionPlayerLoginId);
-				final String[] requestedCoordinates = splitedRequest[2].split(",");
-				if (ongoingGame.makeMove(
-						Integer.parseInt(requestedCoordinates[0]),
-						Integer.parseInt(requestedCoordinates[1]))) {
-					try {
-						client.sendToClient("true"); // client should understand
-						// it and move should be
-						// shown.
-						connectedClient.get(oppositionPlayerLoginId)
-						.sendToClient(splitedRequest[2]);// other client
-						// should
-						// understand
-						// this and
-						// be able
-						// to make
-						// move
-						// successful.
-					} catch (final IOException e) {
-						e.printStackTrace();
-					}
+			handleGameRequest(msg, client, messageFromClient[2]);
+		}
+	}
 
-				} else {
-					// move was not successful
-					try {
-						client.sendToClient("false");
-					} catch (final IOException e) {
-						e.printStackTrace();
-					}// client should understand this and should not move
-						// anything. Can show a pop if needed.
-				}
-
-			} else if (request.equalsIgnoreCase("QUIT")) {
+	private void handleGameRequest(final Object msg,
+			final ConnectionToClient client, final String request) {
+		if(request.equalsIgnoreCase("START")){
+			handleStartGameRequest(msg, client);
+		} else if (request.contains("MakeAMove")) {
+			// TODO: remove not required comments after developer testing.
+			// find a game which it is requesting for by using the opponent
+			// game id.
+			// sample msg: rahul0017_game_MakeAMove-jason007 3,5 sample
+			// request: MakeAMove-jason007 3,5
+			final String[] splitedRequest = request.split("-");
+			System.out.println(splitedRequest); // printing for debugging
+			// purpose
+			// splitted requested: MakeAMove jason007 3,5"
+			final String oppositionPlayerLoginId = splitedRequest[1];
+			final Game ongoingGame = ongoingGames.get(getLoginId((String) msg) + "_"
+					+ oppositionPlayerLoginId);
+			final String[] requestedCoordinates = splitedRequest[2].split(",");
+			if (ongoingGame.makeMove(
+					Integer.parseInt(requestedCoordinates[0]),
+					Integer.parseInt(requestedCoordinates[1]))) {
 				try {
-					client.sendToClient("Lost");
+					client.sendToClient("true"); // client should understand
+					// it and move should be
+					// shown.
+					connectedClient.get(oppositionPlayerLoginId)
+					.sendToClient(splitedRequest[2]);// other client
+					// should
+					// understand
+					// this and
+					// be able
+					// to make
+					// move
+					// successful.
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}
+
+			} else {
+				// move was not successful
+				try {
+					client.sendToClient("false");
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}// client should understand this and should not move
+				// anything. Can show a pop if needed.
 			}
+
+		} else if (request.equalsIgnoreCase("QUIT")) {
+			try {
+				client.sendToClient("Lost");
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * @param msg
+	 * @param client
+	 */
+	private void handleStartGameRequest(final Object msg,
+			final ConnectionToClient client) {
+		if (isPlayerWaiting) {
+			ongoingGames.put(new GameId(playerWaiting,
+					getUser((String) msg)), new Game(
+							playerWaiting, getUser((String) msg)));
+			try {
+				final String playerColor = "black"; // since if player
+				// is waiting color
+				// will be black.
+				client.sendToClient("game-started_" + playerColor); // client
+				// should
+				// understand
+				// this
+				// and
+				// display
+				// the
+				// game
+				// UI.
+				playerWaitingConnection
+				.sendToClient("game-started_white");
+				connectedClient.put(getLoginId((String) msg), client);
+				playerWaiting = null; // Since now no player is waiting.
+				playerWaitingConnection = null;
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			isPlayerWaiting = true;
+			playerWaiting = getUser((String) msg); // TODO: here it
+			// should be loginId
+			playerWaitingConnection = client;
+			connectedClient.put(getLoginId((String) msg), client);
 		}
 	}
 
@@ -131,14 +150,12 @@ public class GameServer extends AbstractServer {
 		return null;
 	}
 
-	private String getRequest(final Object msg) {
-		// TODO Auto-generated method stub
+	/*private String getRequest(final String[] msg) {
 		return null;
-	}
+	}*/
 
-	private String getRequestType(final Object msg) {
-		// TODO Auto-generated method stub
-		return null;
+	private String getRequestType(final String[] msg) {
+		return msg[1];
 	}
 
 	private User getUser(final String string) {
