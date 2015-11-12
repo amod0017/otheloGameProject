@@ -59,6 +59,7 @@ public class GameServer extends AbstractServer {
 						// UI.
 						playerWaitingConnection
 						.sendToClient("game-started_white");
+						connectedClient.put(getLoginId((String) msg), client);
 						playerWaiting = null; // Since now no player is waiting.
 						playerWaitingConnection = null;
 					} catch (final IOException e) {
@@ -68,6 +69,7 @@ public class GameServer extends AbstractServer {
 					isPlayerWaiting = true;
 					playerWaiting = getUser((String) msg);
 					playerWaitingConnection = client;
+					connectedClient.put(getLoginId((String) msg), client);
 				}
 			} else if (request.contains("MakeAMove")) {
 
@@ -102,6 +104,11 @@ public class GameServer extends AbstractServer {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private String getLoginId(final String msg) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private String getRequest(final Object msg) {
