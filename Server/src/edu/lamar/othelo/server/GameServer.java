@@ -68,7 +68,7 @@ public class GameServer extends AbstractServer {
 				} else {
 					isPlayerWaiting = true;
 					playerWaiting = getUser((String) msg); // TODO: here it
-															// should be loginId
+					// should be loginId
 					playerWaitingConnection = client;
 					connectedClient.put(getLoginId((String) msg), client);
 				}
@@ -80,11 +80,41 @@ public class GameServer extends AbstractServer {
 				// request: MakeAMove-jason007 3,5
 				final String[] splitedRequest = request.split("-");
 				System.out.println(splitedRequest); // printing for debugging
-													// purpose
+				// purpose
 				// splitted requested: MakeAMove jason007 3,5"
 				final String oppositionPlayerLoginId = splitedRequest[1];
-				ongoingGames.get(getLoginId((String) msg) + "_"
+				final Game ongoingGame = ongoingGames.get(getLoginId((String) msg) + "_"
 						+ oppositionPlayerLoginId);
+				final String[] requestedCoordinates = splitedRequest[2].split(",");
+				if (ongoingGame.makeMove(
+						Integer.parseInt(requestedCoordinates[0]),
+						Integer.parseInt(requestedCoordinates[1]))) {
+					try {
+						client.sendToClient("true"); // client should understand
+						// it and move should be
+						// shown.
+						connectedClient.get(oppositionPlayerLoginId)
+						.sendToClient(splitedRequest[2]);// other client
+						// should
+						// understand
+						// this and
+						// be able
+						// to make
+						// move
+						// successful.
+					} catch (final IOException e) {
+						e.printStackTrace();
+					}
+
+				} else {
+					// move was not successful
+					try {
+						client.sendToClient("false");
+					} catch (final IOException e) {
+						e.printStackTrace();
+					}// client should understand this and should not move
+						// anything. Can show a pop if needed.
+				}
 
 			} else if (request.equalsIgnoreCase("QUIT")) {
 				try {
@@ -92,29 +122,6 @@ public class GameServer extends AbstractServer {
 				} catch (final IOException e) {
 					e.printStackTrace();
 				}
-			}
-		}
-
-		if (msg.toString().contains("login")) {
-			// code to read user and validate it using data access layer. Should
-			// be done latter.
-		} else if (msg.toString().contains("start a game")) {
-
-		} else if (msg.toString().contains("make a move")) {
-			// 1. get the referred game.
-			if (ongoingGames.containsKey("game id")) {
-				final Game game = ongoingGames.get("game id");
-				// 2. check if valid.
-				if (true /* ideally we should check for a move here. */) {
-					// 3. update game.
-					game.makeMove(null);
-				}
-			}
-			// 4. send to client.
-			try {
-				client.sendToClient("move sucessful");
-			} catch (final IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}

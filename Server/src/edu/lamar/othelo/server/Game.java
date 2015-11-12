@@ -7,13 +7,13 @@ class Game {
 	// null is no piece
 	// true is a white piece
 	// false is a black piece
-	Boolean[][] board = new Boolean[8][8];
-	int wins_needed = 1;
-	User white;
-	User black;
-	int white_score;
-	int black_score;
-	GameId id;
+	private final Boolean[][] board = new Boolean[8][8];
+	private User white;
+	private User black;
+	private int white_score;
+	private int black_score;
+	private final GameId id;
+
 	// constructor for Othello's starting position
 	Game(final User whitePlayer, final User blackPlayer) {
 		white = whitePlayer;
@@ -60,9 +60,13 @@ class Game {
 		black = u;
 	}
 
-	boolean makeMove(final Move m) {
-		if (m.isValidMove()) {
-			board[m.x][m.y] = m.color;
+	// move is priavte and hence it should be created in the class.
+	boolean makeMove(final int xCoordinate, final int yCoordinate) {
+		// TODO: First of all you should check whether player is allowed to move
+		// or not.
+		final Move move = new Move(xCoordinate, yCoordinate);
+		if (move.isValidMove()) {
+			board[move.x][move.y] = move.color;
 			return true;
 		} else {
 			return false;
@@ -92,6 +96,11 @@ class Game {
 	private class Move {
 		int x, y;
 		Boolean color;
+
+		private Move(final int xCoordinate, final int yCoordinate) {
+			x = xCoordinate;
+			y = yCoordinate;
+		}
 
 		boolean isValidMove() {
 			// STUB
