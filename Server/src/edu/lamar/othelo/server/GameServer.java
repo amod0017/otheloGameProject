@@ -112,7 +112,7 @@ public class GameServer extends AbstractServer {
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}// client should understand this and should not move
-				// anything. Can show a pop if needed.
+			// anything. Can show a pop if needed.
 		}
 	}
 
@@ -166,7 +166,7 @@ public class GameServer extends AbstractServer {
 		// FIXME this is just a temporary solution. It needs to be fixed later
 		// with login module.
 		if (!connectedUsers.containsKey(loginId)) {
-			final User user = new User();
+			final User user = new User(loginId, "1234");
 			user.setName(loginId);
 			connectedUsers.put(loginId, user);
 			return user;
