@@ -11,8 +11,10 @@ public class GameClient extends AbstractClient
 {
 
     private final static int MAX_ARGS = 5;
+    GameClient client;
+    private String username, password, host;
 
-    private String username, password;
+
     private String[] serverArgs = new String[MAX_ARGS];
 
     //called upon the client logging in
@@ -22,9 +24,11 @@ public class GameClient extends AbstractClient
 		super(host, port);
 		openConnection();
 		sendToServer("connect");
+
 	}
-	
-	public void quit() throws IOException
+
+
+    public void quit() throws IOException
 	{
 		closeConnection();
 		System.exit(0);
