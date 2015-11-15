@@ -2,35 +2,34 @@ package edu.lamar.othelo.client;
 
 import javax.swing.*;
 
-//stubs
-
-
-
-
-
 public class GUI {
 
+    //TODO: Making moves correctly work on the GUI
     GameClient client;
 
     SpaceState[][] board = new SpaceState[8][8];
+    Chessboard boardView;
 
-    GUI() {
+    SpaceState friend;
+    SpaceState foe;
+
+    GUI(SpaceState friend, SpaceState foe) {
+        this.friend = friend;
+        this.foe = foe;
         initializeGUI();
         drawBoard(board);
     }
 
     public static void main(String[] args) {
-
-        //client = new GameClient(username, password, host, port);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                GUI board = new GUI();
+                GUI board = new GUI(SpaceState.black, SpaceState.white);
             }
         });
     }
 
-    public static void drawBoard(SpaceState[][] gameBoard) {
-        Chessboard board = new Chessboard(gameBoard);
+    public void drawBoard(SpaceState[][] gameBoard) {
+        boardView = new Chessboard(gameBoard);
     }
 
     public final void initializeGUI() {//Set all cells to empty
@@ -48,6 +47,8 @@ public class GUI {
 
     public void setSpace(SpaceState state, int row, int column) {
         board[row][column] = state;
+        boardView.update();
+
     }
 
     public enum SpaceState {

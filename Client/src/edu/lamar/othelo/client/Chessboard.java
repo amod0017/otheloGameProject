@@ -69,6 +69,12 @@ public class Chessboard extends JFrame {
             }
         }    
     }
+
+    public void update() {
+        getContentPane().validate();
+        getContentPane().repaint();
+    }
+
 }
 class DrawRect extends JPanel{
     int row;
@@ -152,3 +158,4 @@ class CustomMouseListener implements MouseListener{
     }
    
 }
+
