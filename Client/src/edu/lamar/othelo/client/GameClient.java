@@ -11,20 +11,32 @@ public class GameClient extends AbstractClient
 {
 
     private final static int MAX_ARGS = 5;
-
-    private String username, password;
+    public String username, password, host = "127.0.0.1";
+    public int port = 5555;
+    public boolean loginDone = false;
+    GUI gameUI;
+    LoginUI loginUI;
     private String[] serverArgs = new String[MAX_ARGS];
 
-    //called upon the client logging in
-	public GameClient(String username, String password,
-	String host, int port) throws IOException
-	{
-		super(host, port);
+    //called upon the client logging in if client has no ID
+    public GameClient(String host, int port) throws IOException {
+        super(host, port);
 		openConnection();
-		sendToServer("connect");
-	}
-	
-	public void quit() throws IOException
+        sendToServer("connect_guest");
+    }
+
+
+    public GameClient(String host, int port, String username, String password, String kind) throws IOException {
+        super(host, port);
+        openConnection();
+        sendToServer(kind + "_" + username + "_" + password);
+    }
+
+    public static void main() throws IOException {
+        LoginUI loginUI = new LoginUI();
+    }
+
+    public void quit() throws IOException
 	{
 		closeConnection();
 		System.exit(0);
