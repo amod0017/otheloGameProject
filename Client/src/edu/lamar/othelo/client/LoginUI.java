@@ -38,7 +38,7 @@ public class LoginUI implements ActionListener {
         String action = ae.getActionCommand();
         if (action.equals("register")) {
             String username = userText.getText();
-            String password = passwordText.getText();
+            String password = new String(passwordText.getPassword());
             String host = hostText.getText();
             int port = Integer.parseInt(portText.getText());
             try {
@@ -49,7 +49,7 @@ public class LoginUI implements ActionListener {
         }
         if (action.equals("login")) {
             String username = userText.getText();
-            String password = passwordText.getText();
+            String password = new String(passwordText.getPassword());
             String host = hostText.getText();
             int port = Integer.parseInt(portText.getText());
             try {
