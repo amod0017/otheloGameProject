@@ -1,18 +1,22 @@
 package edu.lamar.othelo.server;
 class User
 {
-	String name;
-	int password_hash;
-	boolean online;
-	String loginId;
+	private String name;
+	private String password;
+	private boolean online;
 
+	User(final String name, final String password) {
+		this.name = name;
+		this.password = password;
+	}
 	String getName()
 	{
 		return name;
 	}
-	int getPasswordHash()
+
+	String getPassword()
 	{
-		return password_hash;
+		return password;
 	}
 	void setName(final String s)
 	{
@@ -20,7 +24,7 @@ class User
 	}
 	void setPassword(final String s)
 	{
-		password_hash = s.hashCode();
+		password = s;
 	}
 	boolean isOnline()
 	{
