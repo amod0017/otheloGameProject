@@ -20,15 +20,15 @@ public class MessageImpl implements IMessage {
 
 	/**
 	 * makeAMoveCoordinates are null if message is not related to makeAMove.
-	 * password can be null if not registered/loggedIn request
-	 * 
+	 * password can be null if not registered/logged in
+	 *
 	 * @param message
 	 * @param messageType
 	 * @param loginId
 	 * @param makeAMoveCoordinates
 	 * @param password
 	 */
-	MessageImpl(final String message, final String messageType,
+	public MessageImpl(final String message, final String messageType,
 			final String loginId, final String makeAMoveCoordinates,
 			final String password) {
 		this.message = message;

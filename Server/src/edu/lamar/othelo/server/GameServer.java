@@ -38,7 +38,7 @@ public class GameServer extends AbstractServer {
 	protected void handleMessageFromClient(final Object msg, final ConnectionToClient client) {
 		// TODO a common message object needs to be created.
 		// parse message object and get request type.
-		final String[] messageFromClient = ((String) msg).split("_"); // Since
+		final String[] messageFromClient = null; // Since
 		// "_"
 		// will
 		// be
@@ -60,7 +60,7 @@ public class GameServer extends AbstractServer {
 				new User(((MessageImpl) msg).getLogin(), ((MessageImpl) msg)
 						.getPassword()))) {
 			try {
-				client.sendToClient("true");
+				client.sendToClient("register_success");
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -71,7 +71,6 @@ public class GameServer extends AbstractServer {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	private void handleLoginRequest(final Object msg, final ConnectionToClient client) {
