@@ -17,4 +17,6 @@ public interface IMessage extends Serializable {
 	String getLogin();
 
 	String getMakeAMoveCoordinates();
+
+	String getPassword();
 }

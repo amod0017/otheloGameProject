@@ -27,7 +27,7 @@ class UserAccessLayer
 		return userAccessLayer;
 	}
 
-	public User getUser(final String loginId) {
+	public User getUser(final String loginId, final String password) {
 		try {
 			@SuppressWarnings("resource")
 			final Scanner scanner = new Scanner(file);
@@ -38,7 +38,9 @@ class UserAccessLayer
 				if (userDetails.contains(loginId)) {
 					// parse userDetails on basis of ","
 					final String[] userInfo = userDetails.split(",");
-					return new User(userInfo[0], userInfo[1]);
+					if (userInfo[1].equals(password)) {
+						return new User(userInfo[0], userInfo[1]);
+					}
 				}
 			}
 			scanner.close(); // closing scanner

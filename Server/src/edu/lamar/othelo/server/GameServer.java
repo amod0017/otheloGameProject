@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.lamar.othelo.common.MessageImpl;
 import edu.lamar.othelo.server.irp.ChatIF;
 
 /**
@@ -43,15 +44,39 @@ public class GameServer extends AbstractServer {
 		// be
 		// the
 		// seperator.
-		final String requestType = getRequestType(messageFromClient);
+		final String requestType = ((MessageImpl) msg).getMessageType();
 		if (requestType.equalsIgnoreCase("GAME")) {
 			handleGameRequest(msg, client, messageFromClient[2]);
+		} else if (requestType.equalsIgnoreCase("LOGIN")) {
+			handleLoginRequest(msg, client);
+		} else if (requestType.equalsIgnoreCase("REGISTER")) {
+			handleRegisterRequest(msg, client);
+		}
+	}
+
+	private void handleRegisterRequest(final Object msg,
+			final ConnectionToClient client) {
+		UserAccessLayer.getInstance().addUser(
+				new User(((MessageImpl) msg).getLogin(), ((MessageImpl) msg)
+						.getPassword()));
+	}
+
+	private void handleLoginRequest(final Object msg, final ConnectionToClient client) {
+		final User user = UserAccessLayer.getInstance().getUser(
+				((MessageImpl) msg).getLogin(),
+				((MessageImpl) msg).getPassword());
+		if (user != null) {
+			try {
+				client.sendToClient("loggedIn");
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	private void handleGameRequest(final Object msg,
 			final ConnectionToClient client, final String request) {
-		final String loginId = ((String) msg).split("_")[0];
+		final String loginId = ((MessageImpl) msg).getLogin();
 		if(request.equalsIgnoreCase("START")){
 			handleStartGameRequest(msg, client);
 		} else if (request.contains("MakeAMove")) {
@@ -156,10 +181,6 @@ public class GameServer extends AbstractServer {
 		}
 	}
 
-
-	private String getRequestType(final String[] msg) {
-		return msg[1];
-	}
 
 	private User getUser(final String loginId) {
 		// should create a User with login Id.
