@@ -31,37 +31,37 @@ public class GameClient extends AbstractClient {
 
 	private String[] serverArgs = new String[MAX_ARGS];
 
-	// called upon the client logging in if client has no ID
 	public GameClient(String host, int port) throws IOException {
 		super(host, port);
 		openConnection();
-		//sendToServer("connect_guest");
 	}
+	
+//FIXME this should be removed as constructor should only do one thing.
 
-	public GameClient(String host, int port, String username, String password,
-			String kind) throws IOException {
-
-		super(host, port);
-
-		try {
-			openConnection();
-		} catch (ConnectException ce) {
-			JOptionPane
-					.showMessageDialog(
-							null,
-							"Could not find a server on the specified address and port.\nPlease ensure you have the right address and port.");
-		}
-
-		this.username = username;
-		this.password = password;
-		this.host = host;
-		this.port = port;
-
-		// e.g. register_jason_password
-		// e.g. login_jason_password
-
-		sendToServer(kind + "_" + username + "_" + password);
-	}
+//	public GameClient(String host, int port, String username, String password,
+//			String kind) throws IOException {
+//
+//		super(host, port);
+//
+//		try {
+//			openConnection();
+//		} catch (ConnectException ce) {
+//			JOptionPane
+//					.showMessageDialog(
+//							null,
+//							"Could not find a server on the specified address and port.\nPlease ensure you have the right address and port.");
+//		}
+//
+//		this.username = username;
+//		this.password = password;
+//		this.host = host;
+//		this.port = port;
+//
+//		// e.g. register_jason_password
+//		// e.g. login_jason_password
+//
+//		sendToServer(kind + "_" + username + "_" + password);
+//	}
 
 	public static void main(String[] args) throws IOException {
 		LoginUI loginUI = new LoginUI();
@@ -134,6 +134,14 @@ public class GameClient extends AbstractClient {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public void login(String username2, String pd) {
+		try {
+			sendToServer(new MessageImpl("login"+"_"+pd, "Login", username2, null, pd));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

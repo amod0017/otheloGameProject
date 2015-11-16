@@ -66,7 +66,7 @@ public class GameServer extends AbstractServer {
 			}
 		} else {
 			try {
-				client.sendToClient("false");
+				client.sendToClient("register_failure");
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -79,7 +79,13 @@ public class GameServer extends AbstractServer {
 				((MessageImpl) msg).getPassword());
 		if (user != null) {
 			try {
-				client.sendToClient("loggedIn");
+				client.sendToClient("login_success");
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				client.sendToClient("login_failure");
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}

@@ -61,7 +61,17 @@ class UserAccessLayer
 				}
 			}
 			if (!isUserExist) {
-				output.append(user.getName() + "," + user.getPassword());
+				output.append(user.getName() + "," + user.getPassword() + "\n"); // \n
+																					// is
+																					// added
+																					// because
+																					// it
+																					// was
+																					// appending
+																					// on
+																					// the
+																					// same
+																					// line.
 				scanner.close();
 				output.close();
 				return true;

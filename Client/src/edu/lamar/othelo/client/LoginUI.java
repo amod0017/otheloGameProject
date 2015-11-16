@@ -56,7 +56,8 @@ public class LoginUI implements ActionListener {
             String host = hostText.getText();
             int port = Integer.parseInt(portText.getText());
             try {
-                client = new GameClient(host, port, username, password, "login");
+                client = new GameClient(host, port);
+                client.login(username,pd);
             } catch (IOException e) {
                 e.printStackTrace();
             }
