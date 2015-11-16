@@ -50,7 +50,7 @@ class UserAccessLayer
 		return null; // should be handled
 	}
 
-	public void addUser(final User user) {
+	public boolean addUser(final User user) {
 		try {
 			final Writer output = new BufferedWriter(new FileWriter(file, true));
 			boolean isUserExist = false;
@@ -58,16 +58,20 @@ class UserAccessLayer
 			while (scanner.hasNextLine()) {
 				if (scanner.nextLine().contains(user.getName())) {
 					isUserExist = true;
-					break;
 				}
 			}
 			if (!isUserExist) {
 				output.append(user.getName() + "," + user.getPassword());
+				scanner.close();
+				output.close();
+				return true;
 			}
 			scanner.close();
 			output.close();
+			return false;
 		} catch (final IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 }

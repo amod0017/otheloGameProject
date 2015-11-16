@@ -56,9 +56,22 @@ public class GameServer extends AbstractServer {
 
 	private void handleRegisterRequest(final Object msg,
 			final ConnectionToClient client) {
-		UserAccessLayer.getInstance().addUser(
+		if (UserAccessLayer.getInstance().addUser(
 				new User(((MessageImpl) msg).getLogin(), ((MessageImpl) msg)
-						.getPassword()));
+						.getPassword()))) {
+			try {
+				client.sendToClient("true");
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				client.sendToClient("false");
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	private void handleLoginRequest(final Object msg, final ConnectionToClient client) {
