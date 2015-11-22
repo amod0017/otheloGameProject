@@ -169,7 +169,7 @@ public class GameServer extends AbstractServer {
 				final String playerColor = "black"; // since if player
 				// is waiting color
 				// will be black.
-				client.sendToClient("game-started_" + playerColor); // client
+				client.sendToClient("start_" + playerColor); // client
 				// should
 				// understand
 				// this
@@ -179,7 +179,7 @@ public class GameServer extends AbstractServer {
 				// game
 				// UI.
 				playerWaitingConnection
-				.sendToClient("game-started_white");
+.sendToClient("start_white");
 				connectedClient.put(loginId, client);
 				playerWaiting = null; // Since now no player is waiting.
 				playerWaitingConnection = null;
