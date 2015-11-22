@@ -19,7 +19,7 @@ public class GameServer extends AbstractServer {
 	final public static int DEFAULT_PORT = 5555;
 	final private ChatIF serverConsole;
 	private boolean isPlayerWaiting = false;
-	private User playerWaiting = null;
+	private User playerWaiting = new User("emptyUser", null);
 	private ConnectionToClient playerWaitingConnection = null;
 	final private Map<GameId, Game> ongoingGames = new HashMap<GameId, Game>();
 	final private Map<String, ConnectionToClient> connectedClient = new HashMap<String, ConnectionToClient>();
@@ -73,7 +73,8 @@ public class GameServer extends AbstractServer {
 				((MessageImpl) msg).getPassword());
 		if (user != null) {
 			try {
-				client.sendToClient("login_success" + user.getName());
+				connectedUsers.put(user.getName(), user);
+				client.sendToClient("login_success_" + user.getName());
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -160,14 +161,11 @@ public class GameServer extends AbstractServer {
 	 */
 	private void handleStartGameRequest(final Object msg,
 			final ConnectionToClient client) {
-		final String loginId = ((String) msg).split("_")[0];
-		while (!isPlayerWaiting) {
-			;
-		}
-		if (isPlayerWaiting) {
+		final String loginId = ((MessageImpl) msg).getLogin();
+		if (isPlayerWaiting && !(playerWaiting.getName().equals(loginId))) {
 			ongoingGames.put(new GameId(playerWaiting,
 					getUser(loginId)), new Game(
-							playerWaiting, getUser((String) msg)));
+							playerWaiting, getUser(loginId)));
 			try {
 				final String playerColor = "black"; // since if player
 				// is waiting color
@@ -190,9 +188,14 @@ public class GameServer extends AbstractServer {
 			}
 		} else {
 			isPlayerWaiting = true;
-			playerWaiting = getUser(loginId);
+			playerWaiting = connectedUsers.get(loginId);
 			playerWaitingConnection = client;
 			connectedClient.put(loginId, client);
+			try {
+				client.sendToClient("wait");
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -201,12 +204,6 @@ public class GameServer extends AbstractServer {
 		// should create a User with login Id.
 		// FIXME this is just a temporary solution. It needs to be fixed later
 		// with login module.
-		if (!connectedUsers.containsKey(loginId)) {
-			final User user = new User(loginId, "1234");
-			user.setName(loginId);
-			connectedUsers.put(loginId, user);
-			return user;
-		}
 		return connectedUsers.get(loginId);
 	}
 

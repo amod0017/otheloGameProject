@@ -4,23 +4,17 @@
 
 package edu.lamar.othelo.client;
 
-import javax.swing.*;
+import java.io.IOException;
+
+import javax.swing.JOptionPane;
 
 import edu.lamar.othelo.common.MessageImpl;
-
-import java.io.IOException;
-import java.net.ConnectException;
 
 public class GameClient extends AbstractClient {
 
 	private final static int MAX_ARGS = 5;
 
 	private String username;
-	@SuppressWarnings("unused")
-	private String password; // FIXME if it is need to be used thn add it else
-								// remove
-	@SuppressWarnings("unused")
-	private String host = "127.0.0.1";
 	public int port = 5555;
 
 	public GUI.SpaceState friend;
@@ -31,40 +25,40 @@ public class GameClient extends AbstractClient {
 
 	private String[] serverArgs = new String[MAX_ARGS];
 
-	public GameClient(String host, int port) throws IOException {
+	public GameClient(final String host, final int port) throws IOException {
 		super(host, port);
 		openConnection();
 	}
-	
-//FIXME this should be removed as constructor should only do one thing.
 
-//	public GameClient(String host, int port, String username, String password,
-//			String kind) throws IOException {
-//
-//		super(host, port);
-//
-//		try {
-//			openConnection();
-//		} catch (ConnectException ce) {
-//			JOptionPane
-//					.showMessageDialog(
-//							null,
-//							"Could not find a server on the specified address and port.\nPlease ensure you have the right address and port.");
-//		}
-//
-//		this.username = username;
-//		this.password = password;
-//		this.host = host;
-//		this.port = port;
-//
-//		// e.g. register_jason_password
-//		// e.g. login_jason_password
-//
-//		sendToServer(kind + "_" + username + "_" + password);
-//	}
+	//FIXME this should be removed as constructor should only do one thing.
 
-	public static void main(String[] args) throws IOException {
-		LoginUI loginUI = new LoginUI();
+	//	public GameClient(String host, int port, String username, String password,
+	//			String kind) throws IOException {
+	//
+	//		super(host, port);
+	//
+	//		try {
+	//			openConnection();
+	//		} catch (ConnectException ce) {
+	//			JOptionPane
+	//					.showMessageDialog(
+	//							null,
+	//							"Could not find a server on the specified address and port.\nPlease ensure you have the right address and port.");
+	//		}
+	//
+	//		this.username = username;
+	//		this.password = password;
+	//		this.host = host;
+	//		this.port = port;
+	//
+	//		// e.g. register_jason_password
+	//		// e.g. login_jason_password
+	//
+	//		sendToServer(kind + "_" + username + "_" + password);
+	//	}
+
+	public static void main(final String[] args) throws IOException {
+		new LoginUI();
 	}
 
 	public void quit() throws IOException {
@@ -72,33 +66,39 @@ public class GameClient extends AbstractClient {
 		System.exit(0);
 	}
 
-	public void handleMessageFromServer(Object msg) {
+	@Override
+	public void handleMessageFromServer(final Object msg) {
 		serverArgs = msg.toString().split("_");
+		int i = 0;
 		switch (serverArgs[0]) {
 		case "login":
 			if (serverArgs[1].equals("success"))
 			{
 				try {
 					username = serverArgs[2];
-					sendToServer(new MessageImpl("startGame","game",null,null,null));
-				} catch (IOException e) {
+					// JOptionPane.showConfirmDialog(null, "Test I am here");
+					sendToServer(new MessageImpl("startGame","game",username,null,null));
+				} catch (final IOException e) {
 					e.printStackTrace();
 				}
 			}
-			if (serverArgs[1].equals("failure"))
+			if (serverArgs[1].equals("failure")) {
 				JOptionPane.showMessageDialog(null,
 						"Invalid login.\nAre you registered?");
+			}
 
 			break;
 		case "register":
-			if (serverArgs[1].equals("success"))
+			if (serverArgs[1].equals("success")) {
 				JOptionPane.showMessageDialog(null, "Registration successful "
 						+ ".\nYou may now log in");
-			if (serverArgs[1].equals("failure"))
+			}
+			if (serverArgs[1].equals("failure")) {
 				JOptionPane
-						.showMessageDialog(
-								null,
-								"Invalid registration.\n");
+				.showMessageDialog(
+						null,
+						"Invalid registration.\n");
+			}
 
 			break;
 		case "start":
@@ -113,10 +113,23 @@ public class GameClient extends AbstractClient {
 			gameUI = new GUI(friend, foe);
 			break;
 		case "move":
-			int row = Integer.parseInt(serverArgs[1]);
-			int column = Integer.parseInt(serverArgs[2]);
+			final int row = Integer.parseInt(serverArgs[1]);
+			final int column = Integer.parseInt(serverArgs[2]);
 			gameUI.setSpace(foe, row, column);
 			break;
+		case "wait":
+			while(i!=5){
+				try {
+					Thread.sleep(10000);
+					sendToServer(new MessageImpl("startGame","game",username,null,null));
+				} catch (final InterruptedException e) {
+					e.printStackTrace();
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+
+				i++;
+			}
 		}
 
 		// here's the idea, split the string and use args[0] as the command
@@ -126,19 +139,19 @@ public class GameClient extends AbstractClient {
 
 	}
 
-	public void register(String username2, String pd) {
+	public void register(final String username2, final String pd) {
 		try {
 			sendToServer(new MessageImpl("register"+username2+"pd", "register", username2, null, pd));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
-	public void login(String username2, String pd) {
+	public void login(final String username2, final String pd) {
 		try {
 			sendToServer(new MessageImpl("login"+"_"+pd, "Login", username2, null, pd));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
