@@ -73,7 +73,7 @@ public class GameServer extends AbstractServer {
 				((MessageImpl) msg).getPassword());
 		if (user != null) {
 			try {
-				client.sendToClient("login_success");
+				client.sendToClient("login_success" + user.getName());
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -93,7 +93,7 @@ public class GameServer extends AbstractServer {
 			handleStartGameRequest(msg, client);
 		} else if (((MessageImpl) msg).getMessage().contains("MakeAMove")) {
 			handleMakeAMoveRequest(client, "", loginId); // FIXME should be
-															// fixed
+			// fixed
 
 		} else if (((MessageImpl) msg).getMessage().equalsIgnoreCase("QUIT")) {
 			try {
@@ -150,7 +150,7 @@ public class GameServer extends AbstractServer {
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}// client should understand this and should not move
-				// anything. Can show a pop if needed.
+			// anything. Can show a pop if needed.
 		}
 	}
 
