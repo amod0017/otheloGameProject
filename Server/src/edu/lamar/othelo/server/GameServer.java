@@ -6,7 +6,6 @@ package edu.lamar.othelo.server;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.lang.String;
 
 import edu.lamar.othelo.common.MessageImpl;
 import edu.lamar.othelo.server.irp.ChatIF;
@@ -39,15 +38,9 @@ public class GameServer extends AbstractServer {
 	protected void handleMessageFromClient(final Object msg, final ConnectionToClient client) {
 		// TODO a common message object needs to be created.
 		// parse message object and get request type.
-		final String[] messageFromClient = null; // Since
-		// "_"
-		// will
-		// be
-		// the
-		// seperator.
 		final String requestType = ((MessageImpl) msg).getMessageType();
 		if (requestType.equalsIgnoreCase("GAME")) {
-			handleGameRequest(msg, client, messageFromClient[2]);
+			handleGameRequest(msg, client);
 		} else if (requestType.equalsIgnoreCase("LOGIN")) {
 			handleLoginRequest(msg, client);
 		} else if (requestType.equalsIgnoreCase("REGISTER")) {
@@ -94,14 +87,15 @@ public class GameServer extends AbstractServer {
 	}
 
 	private void handleGameRequest(final Object msg,
-			final ConnectionToClient client, final String request) {
+			final ConnectionToClient client) {
 		final String loginId = ((MessageImpl) msg).getLogin();
-		if(request.equalsIgnoreCase("START")){
+		if(((MessageImpl) msg).getMessage().equalsIgnoreCase("STARTGAME")){
 			handleStartGameRequest(msg, client);
-		} else if (request.contains("MakeAMove")) {
-			handleMakeAMoveRequest(client, request, loginId);
+		} else if (((MessageImpl) msg).getMessage().contains("MakeAMove")) {
+			handleMakeAMoveRequest(client, "", loginId); // FIXME should be
+															// fixed
 
-		} else if (request.equalsIgnoreCase("QUIT")) {
+		} else if (((MessageImpl) msg).getMessage().equalsIgnoreCase("QUIT")) {
 			try {
 				client.sendToClient("Lost");
 			} catch (final IOException e) {
@@ -156,7 +150,7 @@ public class GameServer extends AbstractServer {
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}// client should understand this and should not move
-			// anything. Can show a pop if needed.
+				// anything. Can show a pop if needed.
 		}
 	}
 
