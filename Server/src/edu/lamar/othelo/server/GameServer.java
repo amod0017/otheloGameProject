@@ -162,7 +162,8 @@ public class GameServer extends AbstractServer {
 	private void handleStartGameRequest(final Object msg,
 			final ConnectionToClient client) {
 		final String loginId = ((MessageImpl) msg).getLogin();
-		if (isPlayerWaiting && !(playerWaiting.getName().equals(loginId))) {
+		if (isPlayerWaiting && (playerWaiting != null)
+				&& !(playerWaiting.getName().equals(loginId))) {
 			ongoingGames.put(new GameId(playerWaiting,
 					getUser(loginId)), new Game(
 							playerWaiting, getUser(loginId)));

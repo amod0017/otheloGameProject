@@ -69,7 +69,7 @@ public class GameClient extends AbstractClient {
 	@Override
 	public void handleMessageFromServer(final Object msg) {
 		serverArgs = msg.toString().split("_");
-		int i = 0;
+		boolean isGameStarted = false;
 		switch (serverArgs[0]) {
 		case "login":
 			if (serverArgs[1].equals("success"))
@@ -118,7 +118,7 @@ public class GameClient extends AbstractClient {
 			gameUI.setSpace(foe, row, column);
 			break;
 		case "wait":
-			while(i!=5){
+			while(!isGameStarted){
 				try {
 					Thread.sleep(10000);
 					sendToServer(new MessageImpl("startGame","game",username,null,null));
@@ -128,7 +128,6 @@ public class GameClient extends AbstractClient {
 					e.printStackTrace();
 				}
 
-				i++;
 			}
 		}
 
