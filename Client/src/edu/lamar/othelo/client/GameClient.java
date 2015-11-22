@@ -89,18 +89,14 @@ public class GameClient extends AbstractClient {
 			break;
 		case "register":
 			if (serverArgs[1].equals("success"))
-				JOptionPane.showMessageDialog(null, "Registration successful, "
-						+ username + ".\nYou may now log in");
+				JOptionPane.showMessageDialog(null, "Registration successful "
+						+ ".\nYou may now log in");
 			if (serverArgs[1].equals("failure"))
 				JOptionPane
 						.showMessageDialog(
 								null,
 								"Invalid registration.\nYour username must be 5 letters or digits.\nYour password must be 5 digits.");
-			try {
-				GameClient.main(new String[0]);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+
 			break;
 		case "start":
 			if (serverArgs[1].equals("black")) {

@@ -6,6 +6,7 @@ package edu.lamar.othelo.server;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.String;
 
 import edu.lamar.othelo.common.MessageImpl;
 import edu.lamar.othelo.server.irp.ChatIF;
@@ -57,8 +58,8 @@ public class GameServer extends AbstractServer {
 	private void handleRegisterRequest(final Object msg,
 			final ConnectionToClient client) {
 		if (UserAccessLayer.getInstance().addUser(
-				new User(((MessageImpl) msg).getLogin(), ((MessageImpl) msg)
-						.getPassword()))) {
+				new User(((MessageImpl) msg)
+						.getPassword(), ((MessageImpl) msg).getLogin()))) {
 			try {
 				client.sendToClient("register_success");
 			} catch (final IOException e) {
