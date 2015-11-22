@@ -161,6 +161,9 @@ public class GameServer extends AbstractServer {
 	private void handleStartGameRequest(final Object msg,
 			final ConnectionToClient client) {
 		final String loginId = ((String) msg).split("_")[0];
+		while (!isPlayerWaiting) {
+			;
+		}
 		if (isPlayerWaiting) {
 			ongoingGames.put(new GameId(playerWaiting,
 					getUser(loginId)), new Game(
@@ -178,8 +181,7 @@ public class GameServer extends AbstractServer {
 				// the
 				// game
 				// UI.
-				playerWaitingConnection
-.sendToClient("start_white");
+				playerWaitingConnection.sendToClient("start_white");
 				connectedClient.put(loginId, client);
 				playerWaiting = null; // Since now no player is waiting.
 				playerWaitingConnection = null;
