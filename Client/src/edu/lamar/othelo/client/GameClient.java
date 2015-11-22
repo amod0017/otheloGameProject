@@ -77,15 +77,17 @@ public class GameClient extends AbstractClient {
 		switch (serverArgs[0]) {
 		case "login":
 			if (serverArgs[1].equals("success"))
-				JOptionPane.showMessageDialog(null, "Login successful!");
+			{
+				try {
+					sendToServer(new MessageImpl("startGame","game",null,null,null));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			if (serverArgs[1].equals("failure"))
 				JOptionPane.showMessageDialog(null,
 						"Invalid login.\nAre you registered?");
-			try {
-				GameClient.main(new String[0]);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+
 			break;
 		case "register":
 			if (serverArgs[1].equals("success"))
@@ -95,7 +97,7 @@ public class GameClient extends AbstractClient {
 				JOptionPane
 						.showMessageDialog(
 								null,
-								"Invalid registration.\nYour username must be 5 letters or digits.\nYour password must be 5 digits.");
+								"Invalid registration.\n");
 
 			break;
 		case "start":
