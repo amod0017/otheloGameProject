@@ -79,6 +79,7 @@ public class GameClient extends AbstractClient {
 			if (serverArgs[1].equals("success"))
 			{
 				try {
+					username = serverArgs[2];
 					sendToServer(new MessageImpl("startGame","game",null,null,null));
 				} catch (IOException e) {
 					e.printStackTrace();
