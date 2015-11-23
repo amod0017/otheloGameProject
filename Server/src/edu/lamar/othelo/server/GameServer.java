@@ -4,6 +4,7 @@
 package edu.lamar.othelo.server;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,11 +20,11 @@ public class GameServer extends AbstractServer {
 	final public static int DEFAULT_PORT = 5555;
 	final private ChatIF serverConsole;
 	private boolean isPlayerWaiting = false;
-	private User playerWaiting = null;
-	private ConnectionToClient playerWaitingConnection = null;
+	private User playerWaiting = new User("emptyUser", null);
 	final private Map<GameId, Game> ongoingGames = new HashMap<GameId, Game>();
 	final private Map<String, ConnectionToClient> connectedClient = new HashMap<String, ConnectionToClient>();
 	final private Map<String, User> connectedUsers = new HashMap<String, User>();
+	private ConnectionToClient playerWaitingConnection;
 
 	// FIXME: should be a singleton class.
 	public GameServer(final int port) {
@@ -31,6 +32,9 @@ public class GameServer extends AbstractServer {
 		serverConsole = new ServerConsole(port, this);
 	}
 
+	public ChatIF getServerConsole() {
+		return serverConsole;
+	}
 	/* (non-Javadoc)
 	 * @see edu.lamar.othelo.server.AbstractServer#handleMessageFromClient(java.lang.Object, edu.lamar.othelo.server.ConnectionToClient)
 	 */
@@ -38,15 +42,9 @@ public class GameServer extends AbstractServer {
 	protected void handleMessageFromClient(final Object msg, final ConnectionToClient client) {
 		// TODO a common message object needs to be created.
 		// parse message object and get request type.
-		final String[] messageFromClient = null; // Since
-		// "_"
-		// will
-		// be
-		// the
-		// seperator.
 		final String requestType = ((MessageImpl) msg).getMessageType();
 		if (requestType.equalsIgnoreCase("GAME")) {
-			handleGameRequest(msg, client, messageFromClient[2]);
+			handleGameRequest(msg, client);
 		} else if (requestType.equalsIgnoreCase("LOGIN")) {
 			handleLoginRequest(msg, client);
 		} else if (requestType.equalsIgnoreCase("REGISTER")) {
@@ -57,8 +55,8 @@ public class GameServer extends AbstractServer {
 	private void handleRegisterRequest(final Object msg,
 			final ConnectionToClient client) {
 		if (UserAccessLayer.getInstance().addUser(
-				new User(((MessageImpl) msg).getLogin(), ((MessageImpl) msg)
-						.getPassword()))) {
+				new User(((MessageImpl) msg)
+						.getPassword(), ((MessageImpl) msg).getLogin()))) {
 			try {
 				client.sendToClient("register_success");
 			} catch (final IOException e) {
@@ -79,7 +77,8 @@ public class GameServer extends AbstractServer {
 				((MessageImpl) msg).getPassword());
 		if (user != null) {
 			try {
-				client.sendToClient("login_success");
+				connectedUsers.put(user.getName(), user);
+				client.sendToClient("login_success_" + user.getName());
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -93,14 +92,15 @@ public class GameServer extends AbstractServer {
 	}
 
 	private void handleGameRequest(final Object msg,
-			final ConnectionToClient client, final String request) {
+			final ConnectionToClient client) {
 		final String loginId = ((MessageImpl) msg).getLogin();
-		if(request.equalsIgnoreCase("START")){
+		if(((MessageImpl) msg).getMessage().equalsIgnoreCase("STARTGAME")){
 			handleStartGameRequest(msg, client);
-		} else if (request.contains("MakeAMove")) {
-			handleMakeAMoveRequest(client, request, loginId);
+		} else if (((MessageImpl) msg).getMessage().contains("MakeAMove")) {
+			handleMakeAMoveRequest(client, "", loginId); // FIXME should be
+			// fixed
 
-		} else if (request.equalsIgnoreCase("QUIT")) {
+		} else if (((MessageImpl) msg).getMessage().equalsIgnoreCase("QUIT")) {
 			try {
 				client.sendToClient("Lost");
 			} catch (final IOException e) {
@@ -165,16 +165,17 @@ public class GameServer extends AbstractServer {
 	 */
 	private void handleStartGameRequest(final Object msg,
 			final ConnectionToClient client) {
-		final String loginId = ((String) msg).split("_")[0];
-		if (isPlayerWaiting) {
+		final String loginId = ((MessageImpl) msg).getLogin();
+		if (isPlayerWaiting && (playerWaiting != null)
+				&& !(playerWaiting.getName().equals(loginId))) {
 			ongoingGames.put(new GameId(playerWaiting,
 					getUser(loginId)), new Game(
-							playerWaiting, getUser((String) msg)));
+							playerWaiting, getUser(loginId)));
 			try {
 				final String playerColor = "black"; // since if player
 				// is waiting color
 				// will be black.
-				client.sendToClient("game-started_" + playerColor); // client
+				client.sendToClient("start_" + playerColor); // client
 				// should
 				// understand
 				// this
@@ -183,19 +184,32 @@ public class GameServer extends AbstractServer {
 				// the
 				// game
 				// UI.
-				playerWaitingConnection
-				.sendToClient("game-started_white");
+				// sendToAllClients("start_white");
+				playerWaitingConnection.sendToClient("start_white");
 				connectedClient.put(loginId, client);
 				playerWaiting = null; // Since now no player is waiting.
-				playerWaitingConnection = null;
-			} catch (final IOException e) {
+			} catch (final Exception e) {
 				e.printStackTrace();
 			}
 		} else {
-			isPlayerWaiting = true;
-			playerWaiting = getUser(loginId);
-			playerWaitingConnection = client;
-			connectedClient.put(loginId, client);
+			if (connectedUsers.containsKey(loginId)) {
+				isPlayerWaiting = true;
+				playerWaiting = connectedUsers.get(loginId);
+				playerWaitingConnection = client;
+				connectedClient.put(loginId, client);
+				try {
+					client.sendToClient("wait");
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+			} else{
+				try {
+					client.sendToClient("you_are_in_queue");
+				} catch (SocketException e) {
+					e.printStackTrace();
+				}
+			}
+			
 		}
 	}
 
@@ -204,12 +218,6 @@ public class GameServer extends AbstractServer {
 		// should create a User with login Id.
 		// FIXME this is just a temporary solution. It needs to be fixed later
 		// with login module.
-		if (!connectedUsers.containsKey(loginId)) {
-			final User user = new User(loginId, "1234");
-			user.setName(loginId);
-			connectedUsers.put(loginId, user);
-			return user;
-		}
 		return connectedUsers.get(loginId);
 	}
 
