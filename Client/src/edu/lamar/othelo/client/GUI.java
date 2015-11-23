@@ -15,7 +15,7 @@ public class GUI {
 
     SpaceState friend;
     SpaceState foe;
-
+//making a comment so I can commit
     GUI(SpaceState friend, SpaceState foe) {
         this.friend = friend;
         this.foe = foe;
