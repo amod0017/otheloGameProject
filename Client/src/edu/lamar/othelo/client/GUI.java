@@ -2,6 +2,9 @@ package edu.lamar.othelo.client;
 
 import javax.swing.*;
 
+/** Updated by Colton Farter on 11/18/14, 20:18
+ */
+
 public class GUI {
 
     //TODO: Making moves correctly work on the GUI
@@ -52,7 +55,7 @@ public class GUI {
     }
 
     public enum SpaceState {
-        empty, black, white
+        empty, black, white, translucentWhite, translucentBlack //added enums transclucents
     }
 
 }
