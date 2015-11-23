@@ -44,27 +44,29 @@ public class Chessboard extends JFrame {
                 add(new JLabel(""));
         }
         
-        for (int row = 0; row < 8; row++)
-        for (int col = 0; col < 8; col++) {            
-            if(board[row][col] == SpaceState.black)
-            {
-                DrawBlack blackMark = new DrawBlack(row, col);
-                blackMark.addMouseListener(new CustomMouseListener());                
-                add(blackMark);
-            }
-            else if(board[row][col] == SpaceState.white)
-            {
-                DrawWhite whiteMark = new DrawWhite(row, col);
-                whiteMark.addMouseListener(new CustomMouseListener());
-                add(whiteMark);
-            }
-            else
-            {
-                DrawRect emptyRect = new DrawRect(row, col);
-                emptyRect.addMouseListener(new CustomMouseListener());
-                add(emptyRect);
-            }
-        }    
+        for (int row = 0; row < 8; row++){
+	        for (int col = 0; col < 8; col++) {            
+	            if(board[row][col] == SpaceState.black)
+	            {
+	                DrawBlack blackMark = new DrawBlack(row, col);
+	                blackMark.addMouseListener(new CustomMouseListener());                
+	                add(blackMark);
+	            }
+	            else if(board[row][col] == SpaceState.white)
+	            {
+	                DrawWhite whiteMark = new DrawWhite(row, col);
+	                whiteMark.addMouseListener(new CustomMouseListener());
+	                add(whiteMark);
+	            }
+	            else
+	            {
+	                DrawRect emptyRect = new DrawRect(row, col);
+	                System.out.println(row + "," + col);
+	                emptyRect.addMouseListener(new CustomMouseListener());
+	                add(emptyRect);
+	            }
+	        }    
+	    }
     }
 }
 class DrawRect extends JPanel{
@@ -133,6 +135,8 @@ class DrawWhite extends JPanel{
         
 class CustomMouseListener implements MouseListener{
     public void mouseClicked(MouseEvent e) {       
+    	System.out.println(((DrawRect)e.getSource()).row + "," + ((DrawRect)e.getSource()).col);
+    	DrawBlack drawBlack = new DrawBlack(((DrawRect)e.getSource()).row, ((DrawRect)e.getSource()).col);
     }
 
     public void mousePressed(MouseEvent e) {
