@@ -23,7 +23,7 @@ public class Chessboard extends JFrame {
         this.setSize(400, 450);
         this.setBackground(Color.GREEN);
         this.setVisible(true);
-        JFrame Chessboard = new JFrame("Othello"); //added this for the title woo
+        JFrame Chessboard = new JFrame("Othello"); //added this for the title
         this.setTitle("Othello");
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
