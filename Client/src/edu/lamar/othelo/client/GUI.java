@@ -2,7 +2,7 @@ package edu.lamar.othelo.client;
 
 import javax.swing.*;
 
-/** Updated by Colton Farter on 11/18/14, 20:18
+/** Updated by Colton Farter on 11/18/14, 20:18 yeah
  */
 
 public class GUI {

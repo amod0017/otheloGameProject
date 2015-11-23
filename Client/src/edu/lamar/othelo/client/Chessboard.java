@@ -8,7 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-/** Updated by Colton Carter on 11/18/14, 20:18
+/** Updated by Colton Carter on 11/18/14, 20:18, yeah
  */
 
 public class Chessboard extends JFrame {
