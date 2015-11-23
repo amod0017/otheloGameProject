@@ -126,10 +126,10 @@ public class GameClient extends AbstractClient {
 				try {
 					System.out.println("waiting");
 					Thread.sleep(10000);
-					sendToServer(new MessageImpl("startGame","game",username,null,null));
+					//sendToServer(new MessageImpl("startGame","game",username,null,null));
 				} catch (final InterruptedException e) {
 					e.printStackTrace();
-				} catch (final IOException e) {
+				//} catch (final IOException e) {
 					e.printStackTrace();
 				}
 

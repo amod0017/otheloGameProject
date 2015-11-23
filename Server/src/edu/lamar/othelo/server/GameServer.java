@@ -4,6 +4,7 @@
 package edu.lamar.othelo.server;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -191,15 +192,24 @@ public class GameServer extends AbstractServer {
 				e.printStackTrace();
 			}
 		} else {
-			isPlayerWaiting = true;
-			playerWaiting = connectedUsers.get(loginId);
-			playerWaitingConnection = client;
-			connectedClient.put(loginId, client);
-			try {
-				client.sendToClient("wait");
-			} catch (final IOException e) {
-				e.printStackTrace();
+			if (connectedUsers.containsKey(loginId)) {
+				isPlayerWaiting = true;
+				playerWaiting = connectedUsers.get(loginId);
+				playerWaitingConnection = client;
+				connectedClient.put(loginId, client);
+				try {
+					client.sendToClient("wait");
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+			} else{
+				try {
+					client.sendToClient("you_are_in_queue");
+				} catch (SocketException e) {
+					e.printStackTrace();
+				}
 			}
+			
 		}
 	}
 
