@@ -20,10 +20,10 @@ public class GameServer extends AbstractServer {
 	final private ChatIF serverConsole;
 	private boolean isPlayerWaiting = false;
 	private User playerWaiting = new User("emptyUser", null);
-	private ConnectionToClient playerWaitingConnection = null;
 	final private Map<GameId, Game> ongoingGames = new HashMap<GameId, Game>();
 	final private Map<String, ConnectionToClient> connectedClient = new HashMap<String, ConnectionToClient>();
 	final private Map<String, User> connectedUsers = new HashMap<String, User>();
+	private ConnectionToClient playerWaitingConnection;
 
 	// FIXME: should be a singleton class.
 	public GameServer(final int port) {
@@ -31,6 +31,9 @@ public class GameServer extends AbstractServer {
 		serverConsole = new ServerConsole(port, this);
 	}
 
+	public ChatIF getServerConsole() {
+		return serverConsole;
+	}
 	/* (non-Javadoc)
 	 * @see edu.lamar.othelo.server.AbstractServer#handleMessageFromClient(java.lang.Object, edu.lamar.othelo.server.ConnectionToClient)
 	 */
@@ -180,11 +183,11 @@ public class GameServer extends AbstractServer {
 				// the
 				// game
 				// UI.
+				// sendToAllClients("start_white");
 				playerWaitingConnection.sendToClient("start_white");
 				connectedClient.put(loginId, client);
 				playerWaiting = null; // Since now no player is waiting.
-				playerWaitingConnection = null;
-			} catch (final IOException e) {
+			} catch (final Exception e) {
 				e.printStackTrace();
 			}
 		} else {

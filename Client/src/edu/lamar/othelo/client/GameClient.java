@@ -20,7 +20,7 @@ public class GameClient extends AbstractClient {
 	public GUI.SpaceState friend;
 	public GUI.SpaceState foe;
 
-	GUI gameUI;
+	//GUI gameUI;
 	LoginUI loginUI;
 
 	private String[] serverArgs = new String[MAX_ARGS];
@@ -68,8 +68,10 @@ public class GameClient extends AbstractClient {
 
 	@Override
 	public void handleMessageFromServer(final Object msg) {
+		System.out.println("msg recived" + msg);
 		serverArgs = msg.toString().split("_");
 		boolean isGameStarted = false;
+		GUI gameUI = null;
 		switch (serverArgs[0]) {
 		case "login":
 			if (serverArgs[1].equals("success"))
@@ -110,7 +112,9 @@ public class GameClient extends AbstractClient {
 				friend = GUI.SpaceState.white;
 				foe = GUI.SpaceState.black;
 			}
+			System.out.println("creating game UI");
 			gameUI = new GUI(friend, foe);
+			isGameStarted = true;
 			break;
 		case "move":
 			final int row = Integer.parseInt(serverArgs[1]);
@@ -118,8 +122,9 @@ public class GameClient extends AbstractClient {
 			gameUI.setSpace(foe, row, column);
 			break;
 		case "wait":
-			while(!isGameStarted){
+			//while(!isGameStarted){
 				try {
+					System.out.println("waiting");
 					Thread.sleep(10000);
 					sendToServer(new MessageImpl("startGame","game",username,null,null));
 				} catch (final InterruptedException e) {
@@ -128,7 +133,7 @@ public class GameClient extends AbstractClient {
 					e.printStackTrace();
 				}
 
-			}
+			//}
 		}
 
 		// here's the idea, split the string and use args[0] as the command
