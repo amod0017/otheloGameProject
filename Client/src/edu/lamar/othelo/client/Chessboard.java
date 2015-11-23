@@ -1,11 +1,9 @@
 package edu.lamar.othelo.client;
-
-import edu.lamar.othelo.client.GUI.SpaceState;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import edu.lamar.othelo.client.GUI.SpaceState;
+import java.awt.event.*;
+
+import java.awt.* ;
 
 public class Chessboard extends JFrame {
     private int i;
@@ -16,10 +14,9 @@ public class Chessboard extends JFrame {
         this.setSize(400, 450);
         this.setBackground(Color.GREEN);
         this.setVisible(true);
-        //JFrame Chessboard = new JFrame("Othello"); //added this for the title woo
+        JFrame Chessboard = new JFrame("Othello"); //added this for the title woo
         this.setTitle("Othello");
         this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         int blackCounter = 0;
         int whiteCounter = 0;
@@ -69,20 +66,14 @@ public class Chessboard extends JFrame {
             }
         }    
     }
-
-    public void update() {
-        getContentPane().validate();
-        getContentPane().repaint();
-    }
-
 }
 class DrawRect extends JPanel{
-    int row;
-    int col;
     public DrawRect(int row, int col) {
         this.row = row;
         this.col = col;
     }
+    int row;
+    int col;
     
     @Override
     protected void paintComponent (Graphics g){
@@ -98,13 +89,12 @@ class DrawRect extends JPanel{
 }
 
 class DrawBlack extends JPanel{
-    int row;
-    int col;
     public DrawBlack(int row, int col) {
         this.row = row;
         this.col = col;
     }
-
+    int row;
+    int col;
     @Override
     protected void paintComponent (Graphics g){
         super.paintComponent(g); 
@@ -121,12 +111,12 @@ class DrawBlack extends JPanel{
 }
 
 class DrawWhite extends JPanel{
-    int row;
-    int col;
     public DrawWhite(int row, int col) {
         this.row = row;
         this.col = col;
     }
+    int row;
+    int col;
 
     @Override
     protected void paintComponent (Graphics g){
@@ -158,4 +148,3 @@ class CustomMouseListener implements MouseListener{
     }
    
 }
-

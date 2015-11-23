@@ -1,42 +1,27 @@
 package edu.lamar.othelo.client;
-
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 public class GUI {
-
-    //TODO: Making moves correctly work on the GUI
-    GameClient client;
-
+    public enum SpaceState {
+        empty, black, white
+    }
+    
     SpaceState[][] board = new SpaceState[8][8];
-    Chessboard boardView;
-
-    SpaceState friend;
-    SpaceState foe;
-
-    GUI(SpaceState friend, SpaceState foe) {
-        this.friend = friend;
-        this.foe = foe;
-        initializeGUI();
+    
+    
+    
+    
+    GUI ()
+    {
+        initializeGUI();        
         drawBoard(board);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                GUI board = new GUI(SpaceState.black, SpaceState.white);
-            }
-        });
-    }
-
-    public void drawBoard(SpaceState[][] gameBoard) {
-        boardView = new Chessboard(gameBoard);
-    }
-
-    public final void initializeGUI() {//Set all cells to empty
+    
+    public final void initializeGUI()
+    {//Set all cells to empty
         for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                board[x][y] = SpaceState.empty;
-            }
+             for (int y = 0; y < 8; y++) {
+        board[x][y] = SpaceState.empty; }
         }
         //Set the 4 starting stones
         board[4][3] = SpaceState.black;
@@ -44,17 +29,26 @@ public class GUI {
         board[3][3] = SpaceState.white;
         board[4][4] = SpaceState.white;
     }
-
-    public void setSpace(SpaceState state, int row, int column) {
+    
+    public void setSpace(SpaceState state, int row, int column)
+    {
         board[row][column] = state;
-        boardView.update();
-
     }
-
-    public enum SpaceState {
-        empty, black, white
+    
+    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable(){
+            public void run() {
+        GUI board = new GUI();      
+            }
+        });
     }
-
+    
+    public static void drawBoard(SpaceState[][] gameBoard)
+    {
+        Chessboard blah = new Chessboard(gameBoard);            
+    }
+    
 }
 
 
