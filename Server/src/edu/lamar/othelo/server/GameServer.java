@@ -202,6 +202,7 @@ public class GameServer extends AbstractServer {
 				try {
 					client.sendToClient("you_are_in_queue");
 				} catch (final SocketException e) {
+				} catch (final Exception e) {
 					e.printStackTrace();
 				}
 			}
