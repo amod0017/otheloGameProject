@@ -25,7 +25,7 @@ public class GameServer extends AbstractServer {
 	final private Map<String, ConnectionToClient> connectedClient = new HashMap<String, ConnectionToClient>();
 	final private Map<String, User> connectedUsers = new HashMap<String, User>();
 	private ConnectionToClient playerWaitingConnection;
-
+	private final Map<String, String> playingWithInfo = new HashMap<String, String>();
 	// FIXME: should be a singleton class.
 	public GameServer(final int port) {
 		super(port);
@@ -96,8 +96,8 @@ public class GameServer extends AbstractServer {
 		final String loginId = ((MessageImpl) msg).getLogin();
 		if(((MessageImpl) msg).getMessage().equalsIgnoreCase("STARTGAME")){
 			handleStartGameRequest(msg, client);
-		} else if (((MessageImpl) msg).getMessage().contains("MakeAMove")) {
-			handleMakeAMoveRequest(client, "", loginId); // FIXME should be
+		} else if (((MessageImpl) msg).getMessage().equalsIgnoreCase("MakeAMove")) {
+			handleMakeAMoveRequest(client, msg, loginId); // FIXME should be
 			// fixed
 
 		} else if (((MessageImpl) msg).getMessage().equalsIgnoreCase("QUIT")) {
@@ -115,28 +115,22 @@ public class GameServer extends AbstractServer {
 	 * @param loginId
 	 */
 	private void handleMakeAMoveRequest(final ConnectionToClient client,
-			final String request, final String loginId) {
-		// TODO: remove not required comments after developer testing.
-		// find a game which it is requesting for by using the opponent
-		// game id.
-		// sample msg: rahul0017_game_MakeAMove-jason007 3,5 sample
-		// request: MakeAMove-jason007 3,5
-		final String[] splitedRequest = request.split("-");
-		System.out.println(splitedRequest); // printing for debugging
-		// purpose
-		// splitted requested: MakeAMove jason007 3,5"
-		final String oppositionPlayerLoginId = splitedRequest[1];
-		final Game ongoingGame = ongoingGames.get(loginId + "_"
-				+ oppositionPlayerLoginId);
-		final String[] requestedCoordinates = splitedRequest[2].split(",");
+			final Object msg, final String loginId) {
+		final String oppositionPlayerLoginId = playingWithInfo.get(loginId);
+		final Game ongoingGame = ongoingGames
+				.get(new GameId(connectedUsers.get(loginId), connectedUsers.get(oppositionPlayerLoginId)));
+		final String[] requestedCoordinates = ((MessageImpl) msg).getMakeAMoveCoordinates().split(",");
 		if (ongoingGame.makeMove(Integer.parseInt(requestedCoordinates[0]),
 				Integer.parseInt(requestedCoordinates[1]))) {
 			try {
-				client.sendToClient("true"); // client should understand
+				client.sendToClient("move_" + requestedCoordinates[0] + "_" + requestedCoordinates[1]); // client
+				// should
+				// understand
 				// it and move should be
 				// shown.
 				connectedClient.get(oppositionPlayerLoginId).sendToClient(
-						splitedRequest[2]);// other client
+("move_" + requestedCoordinates[0] + "_" + requestedCoordinates[1]));// other
+				// client
 				// should
 				// understand
 				// this and
@@ -151,7 +145,7 @@ public class GameServer extends AbstractServer {
 		} else {
 			// move was not successful
 			try {
-				client.sendToClient("false");
+				client.sendToClient("move_nothing");
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}// client should understand this and should not move
@@ -187,6 +181,8 @@ public class GameServer extends AbstractServer {
 				// sendToAllClients("start_white");
 				playerWaitingConnection.sendToClient("start_white");
 				connectedClient.put(loginId, client);
+				playingWithInfo.put(loginId, playerWaiting.getName());
+				playingWithInfo.put(playerWaiting.getName(), loginId);
 				playerWaiting = null; // Since now no player is waiting.
 			} catch (final Exception e) {
 				e.printStackTrace();
@@ -205,11 +201,11 @@ public class GameServer extends AbstractServer {
 			} else{
 				try {
 					client.sendToClient("you_are_in_queue");
-				} catch (SocketException e) {
+				} catch (final SocketException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 	}
 

@@ -16,9 +16,10 @@ public class LoginUI implements ActionListener {
     JPasswordField passwordText = new JPasswordField(20);
     JTextField hostText = new JTextField(15);
     JTextField portText = new JTextField(5);
+    JFrame frame = new JFrame("Login");
 
     LoginUI() {
-        JFrame frame = new JFrame("Login");
+        
         frame.setSize(300, 250);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
