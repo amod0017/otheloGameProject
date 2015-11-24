@@ -42,12 +42,8 @@ public class LoginUI implements ActionListener {
             String password = String.valueOf(pd.hashCode());
             String host = hostText.getText();
             int port = Integer.parseInt(portText.getText());
-            try {
-                client = new GameClient(host, port);
-                client.register(username,pd);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            client = GameClient.getInstance(host, port);
+			client.register(username,pd);
         }
         if (action.equals("login")) {
             String username = userText.getText();
@@ -55,12 +51,8 @@ public class LoginUI implements ActionListener {
             String password = String.valueOf(pd.hashCode());
             String host = hostText.getText();
             int port = Integer.parseInt(portText.getText());
-            try {
-                client = new GameClient(host, port);
-                client.login(username,pd);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            client = GameClient.getInstance(host, port);
+			client.login(username,pd);
         }
     }
 

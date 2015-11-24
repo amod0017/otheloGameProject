@@ -22,12 +22,25 @@ public class GameClient extends AbstractClient {
 
 	//GUI gameUI;
 	LoginUI loginUI;
-
+	GUI gameUI = null;
+	static GameClient instance;
 	private String[] serverArgs = new String[MAX_ARGS];
 
-	public GameClient(final String host, final int port) throws IOException {
+	private GameClient(final String host, final int port) throws IOException {
 		super(host, port);
 		openConnection();
+	}
+	
+	public static GameClient getInstance(final String host, final int port){
+		try {
+		if (instance== null) {
+			return new GameClient(host, port);
+		}
+		return instance;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	//FIXME this should be removed as constructor should only do one thing.
@@ -71,7 +84,6 @@ public class GameClient extends AbstractClient {
 		System.out.println("msg recived" + msg);
 		serverArgs = msg.toString().split("_");
 		boolean isGameStarted = false;
-		GUI gameUI = null;
 		switch (serverArgs[0]) {
 		case "login":
 			if (serverArgs[1].equals("success"))
@@ -113,7 +125,7 @@ public class GameClient extends AbstractClient {
 				foe = GUI.SpaceState.black;
 			}
 			System.out.println("creating game UI");
-			gameUI = new GUI(friend, foe);
+			gameUI = new GUI();
 			isGameStarted = true;
 			break;
 		case "move":
