@@ -141,7 +141,7 @@ class Game {
                 ix++;
                 if(Game.this.board[ix][iy] != color)
                     foundPiece = true;
-            }while(!foundPiece || (0 <= ix && ix <= 7) || (0 <= iy && iy <= 7));
+            }while(!foundPiece && (0 <= ix && ix <= 7) && (0 <= iy && iy <= 7));
 
             if(foundPiece)
             {
@@ -161,7 +161,7 @@ class Game {
                 iy++;
                 if(Game.this.board[ix][iy] != color)
                     foundPiece = true;
-            }while(!foundPiece || (0 <= ix && ix <= 7) || (0 <= iy && iy <= 7));
+            }while(!foundPiece && (0 <= ix && ix <= 7) && (0 <= iy && iy <= 7));
 
             if(foundPiece)
             {
@@ -182,7 +182,7 @@ class Game {
                 ix--;
                 if(Game.this.board[ix][iy] != color)
                     foundPiece = true;
-            }while(!foundPiece || (1 <= ix && ix <= 8) || (1 <= iy && iy <= 8));
+            }while(!foundPiece && (1 <= ix && ix <= 8) && (1 <= iy && iy <= 8));
 
             if(foundPiece)
             {
@@ -203,7 +203,7 @@ class Game {
                 iy--;
                 if(Game.this.board[ix][iy] != color)
                     foundPiece = true;
-            }while(!foundPiece || (1 <= ix && ix <= 8) || (1 <= iy && iy <= 8));
+            }while(!foundPiece && (1 <= ix && ix <= 8) && (1 <= iy && iy <= 8));
 
             if(foundPiece)
             {
@@ -225,7 +225,7 @@ class Game {
                 iy--;
                 if(Game.this.board[ix][iy] != color)
                     foundPiece = true;
-            }while(!foundPiece || (1 <= ix && ix <= 8) || (1 <= iy && iy <= 8));
+            }while(!foundPiece && (1 <= ix && ix <= 8) && (1 <= iy && iy <= 8));
 
             if(foundPiece)
             {
@@ -247,7 +247,7 @@ class Game {
                 iy++;
                 if(Game.this.board[ix][iy] != color)
                     foundPiece = true;
-            }while(!foundPiece || (1 <= ix && ix <= 8) || (1 <= iy && iy <= 8));
+            }while(!foundPiece && (1 <= ix && ix <= 8) && (1 <= iy && iy <= 8));
 
             if(foundPiece)
             {
@@ -269,7 +269,7 @@ class Game {
                 iy++;
                 if(Game.this.board[ix][iy] != color)
                     foundPiece = true;
-            }while(!foundPiece || (1 <= ix && ix <= 8) || (1 <= iy && iy <= 8));
+            }while(!foundPiece && (1 <= ix && ix <= 8) && (1 <= iy && iy <= 8));
 
             if(foundPiece)
             {
@@ -292,7 +292,7 @@ class Game {
                 iy--;
                 if(Game.this.board[ix][iy] != color)
                     foundPiece = true;
-            }while(!foundPiece || (1 <= ix && ix <= 8) || (1 <= iy && iy <= 8));
+            }while(!foundPiece && (1 <= ix && ix <= 8) && (1 <= iy && iy <= 8));
 
             if(foundPiece)
             {
