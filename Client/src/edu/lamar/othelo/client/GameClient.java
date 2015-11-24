@@ -32,14 +32,14 @@ public class GameClient extends AbstractClient {
 		super(host, port);
 		openConnection();
 	}
-	
+
 	public static GameClient getInstance(final String host, final int port){
 		try {
-		if (instance== null) {
-			instance = new GameClient(host, port);
-		}
-		return instance;
-		} catch (IOException e) {
+			if (instance== null) {
+				instance = new GameClient(host, port);
+			}
+			return instance;
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -59,7 +59,6 @@ public class GameClient extends AbstractClient {
 	public void handleMessageFromServer(final Object msg) {
 		System.out.println("msg recived" + msg);
 		serverArgs = msg.toString().split("_");
-		boolean isGameStarted = false;
 		switch (serverArgs[0]) {
 		case "login":
 			if (serverArgs[1].equals("success"))
@@ -102,7 +101,6 @@ public class GameClient extends AbstractClient {
 			}
 			System.out.println("creating game UI");
 			gameUI = new GUI();
-			isGameStarted = true;
 			loginUi.frame.setVisible(false);
 			break;
 		case "move":
@@ -110,23 +108,18 @@ public class GameClient extends AbstractClient {
 			final int column = Integer.parseInt(serverArgs[2]);
 			if (serverArgs[3].equals(username)) {
 				gameUI.setSpace(friend, row, column);
-				gameUI.drawBoard(gameUI.board);
+				GUI.drawBoard(gameUI.board);
 			}else{
 				gameUI.setSpace(foe, row, column);
-				gameUI.drawBoard(gameUI.board);
+				GUI.drawBoard(gameUI.board);
 			}
 			break;
 		case "wait":
-			//while(!isGameStarted){
-				try {
-					System.out.println("waiting");
-					Thread.sleep(10000);
-					//sendToServer(new MessageImpl("startGame","game",username,null,null));
-				} catch (final InterruptedException e) {
-					e.printStackTrace();
-				//} catch (final IOException e) {
-					e.printStackTrace();
-				}
+			System.out.println("waiting");
+			JOptionPane.showMessageDialog(loginUi.frame, "Waiting for other player to play the game.");
+			// Thread.sleep(10000);
+			// sendToServer(new
+			// MessageImpl("startGame","game",username,null,null));
 
 			//}
 		}
@@ -159,10 +152,10 @@ public class GameClient extends AbstractClient {
 		return instance;
 	}
 
-	public void handleMakeAMove(int row, int col) {
+	public void handleMakeAMove(final int row, final int col) {
 		try {
 			sendToServer(new MessageImpl("makeAMove", "game", username, row+ "," + col, null));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
