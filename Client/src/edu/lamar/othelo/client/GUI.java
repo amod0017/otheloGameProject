@@ -4,7 +4,7 @@ import javax.swing.SwingUtilities;
 public class GUI {
 	private static Chessboard chessboard;
 	public enum SpaceState {
-		empty, black, white
+		empty, black, white, TranslucentWhite, TranslucentBlack /**added this in, Jason*/
 	}
 
 	SpaceState[][] board = new SpaceState[8][8];
@@ -48,7 +48,7 @@ public class GUI {
 
 	public static void drawBoard(final SpaceState[][] gameBoard)
 	{
-		if (chessboard!=null) {
+		if (chessboard!=null) { /**added this in, hopefully it fixes the issue that .dispose did otherwise scrap it Jason*/
 			chessboard.draw();
 			chessboard.revalidate();
 			// return;
