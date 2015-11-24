@@ -49,7 +49,8 @@ public class GUI {
 	public static void drawBoard(final SpaceState[][] gameBoard)
 	{
 		if (chessboard!=null) {
-			chessboard.dispose();
+			chessboard.draw();
+			chessboard.revalidate();
 			// return;
 		}
 		chessboard = new Chessboard(gameBoard);

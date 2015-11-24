@@ -15,7 +15,7 @@ public class Chessboard extends JFrame {
     }
 
 
-	private void draw() { //MDA for storing of board
+	public void draw() { //MDA for storing of board
         this.setLayout(new GridLayout(9,8,0,0)); //rows and column sizes
         this.setSize(400, 450);
         this.setBackground(Color.GREEN);
