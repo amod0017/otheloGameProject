@@ -7,9 +7,15 @@ import java.awt.* ;
 
 public class Chessboard extends JFrame {
     private int i;
-   
+    private SpaceState[][] board;
     
-    public Chessboard (SpaceState[][] board){ //MDA for storing of board
+    public Chessboard (SpaceState[][] board){
+    	this.board = board;
+    	draw();
+    }
+
+
+	private void draw() { //MDA for storing of board
         this.setLayout(new GridLayout(9,8,0,0)); //rows and column sizes
         this.setSize(400, 450);
         this.setBackground(Color.GREEN);
@@ -49,25 +55,31 @@ public class Chessboard extends JFrame {
 	            if(board[row][col] == SpaceState.black)
 	            {
 	                DrawBlack blackMark = new DrawBlack(row, col);
-	                blackMark.addMouseListener(new CustomMouseListener());                
+	                blackMark.addMouseListener(new CustomMouseListener(this));                
 	                add(blackMark);
 	            }
 	            else if(board[row][col] == SpaceState.white)
 	            {
 	                DrawWhite whiteMark = new DrawWhite(row, col);
-	                whiteMark.addMouseListener(new CustomMouseListener());
+	                whiteMark.addMouseListener(new CustomMouseListener(this));
 	                add(whiteMark);
 	            }
 	            else
 	            {
 	                DrawRect emptyRect = new DrawRect(row, col);
 	                System.out.println(row + "," + col);
-	                emptyRect.addMouseListener(new CustomMouseListener());
+	                emptyRect.addMouseListener(new CustomMouseListener(this));
 	                add(emptyRect);
 	            }
 	        }    
 	    }
     }
+	
+	@Override
+	public void repaint() {
+		super.repaint();
+		draw();
+	}
 }
 class DrawRect extends JPanel{
     public DrawRect(int row, int col) {
@@ -134,9 +146,19 @@ class DrawWhite extends JPanel{
 }
         
 class CustomMouseListener implements MouseListener{
-    public void mouseClicked(MouseEvent e) {       
+	Chessboard chessboard;
+    public CustomMouseListener(Chessboard chessboard) {
+    	this.chessboard = chessboard;
+    }
+
+	public void mouseClicked(MouseEvent e) {       
     	System.out.println(((DrawRect)e.getSource()).row + "," + ((DrawRect)e.getSource()).col);
-    	DrawBlack drawBlack = new DrawBlack(((DrawRect)e.getSource()).row, ((DrawRect)e.getSource()).col);
+    	GameClient.getInstance().handleMakeAMove(((DrawRect)e.getSource()).row,((DrawRect)e.getSource()).col);
+//    	DrawBlack drawBlack = new DrawBlack(((DrawRect)e.getSource()).row, ((DrawRect)e.getSource()).col);
+//    	chessboard.remove((Component) e.getSource());
+//    	chessboard.add(drawBlack);
+//    	chessboard.revalidate();
+//    	chessboard.repaint();
     }
 
     public void mousePressed(MouseEvent e) {
