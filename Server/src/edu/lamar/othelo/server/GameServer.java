@@ -123,13 +123,13 @@ public class GameServer extends AbstractServer {
 		if (ongoingGame.makeMove(Integer.parseInt(requestedCoordinates[0]),
 				Integer.parseInt(requestedCoordinates[1]))) {
 			try {
-				client.sendToClient("move_" + requestedCoordinates[0] + "_" + requestedCoordinates[1]); // client
+				client.sendToClient("move_" + requestedCoordinates[0] + "_" + requestedCoordinates[1] + "_" + loginId); // client
 				// should
 				// understand
 				// it and move should be
 				// shown.
 				connectedClient.get(oppositionPlayerLoginId).sendToClient(
-("move_" + requestedCoordinates[0] + "_" + requestedCoordinates[1]));// other
+						("move_" + requestedCoordinates[0] + "_" + requestedCoordinates[1]) + "_" + loginId);// other
 				// client
 				// should
 				// understand
