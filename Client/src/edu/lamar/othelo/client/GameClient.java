@@ -108,10 +108,13 @@ public class GameClient extends AbstractClient {
 		case "move":
 			final int row = Integer.parseInt(serverArgs[1]);
 			final int column = Integer.parseInt(serverArgs[2]);
-			System.out.println("color" + foe);
-			System.out.println("row,col"+row+","+column);
-			gameUI.setSpace(foe, row, column);
-			gameUI.drawBoard(gameUI.board);
+			if (serverArgs[3].equals(username)) {
+				gameUI.setSpace(friend, row, column);
+				gameUI.drawBoard(gameUI.board);
+			}else{
+				gameUI.setSpace(foe, row, column);
+				gameUI.drawBoard(gameUI.board);
+			}
 			break;
 		case "wait":
 			//while(!isGameStarted){
