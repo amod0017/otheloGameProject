@@ -23,6 +23,11 @@ public class GameId {
 	}
 
 	@Override
+	public int hashCode() {
+		return 1;
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (((obj instanceof String) || (obj instanceof GameId))
 				&& obj.toString().equals(getGameId())) {

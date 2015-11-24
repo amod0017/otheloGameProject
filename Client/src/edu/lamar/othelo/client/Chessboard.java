@@ -7,9 +7,15 @@ import java.awt.* ;
 
 public class Chessboard extends JFrame {
     private int i;
-   
+    private SpaceState[][] board;
     
-    public Chessboard (SpaceState[][] board){ //MDA for storing of board
+    public Chessboard (SpaceState[][] board){
+    	this.board = board;
+    	draw();
+    }
+
+    /**changed from private to public*/
+	public void draw() { //MDA for storing of board
         this.setLayout(new GridLayout(9,8,0,0)); //rows and column sizes
         this.setSize(400, 450);
         this.setBackground(Color.GREEN);
@@ -49,25 +55,43 @@ public class Chessboard extends JFrame {
 	            if(board[row][col] == SpaceState.black)
 	            {
 	                DrawBlack blackMark = new DrawBlack(row, col);
-	                blackMark.addMouseListener(new CustomMouseListener());                
+	                blackMark.addMouseListener(new CustomMouseListener(this));                
 	                add(blackMark);
 	            }
 	            else if(board[row][col] == SpaceState.white)
 	            {
 	                DrawWhite whiteMark = new DrawWhite(row, col);
-	                whiteMark.addMouseListener(new CustomMouseListener());
+	                whiteMark.addMouseListener(new CustomMouseListener(this));
 	                add(whiteMark);
 	            }
+                else if(board[row][col] == SpaceState.TranslucentWhite) /**added this in, Jason*/
+                {
+                    DrawTranslucentWhite translucentWhiteMark = new DrawTranslucentWhite(row, col);
+                    translucentWhiteMark.addMouseListener(new CustomMouseListener(this));
+                    add(translucentWhiteMark);
+                }
+                else if(board[row][col] == SpaceState.TranslucentBlack) /**added this in, Jason*/
+                {
+                    DrawTranslucentBlack translucentBlackMark = new DrawTranslucentBlack(row, col);
+                    translucentBlackMark.addMouseListener(new CustomMouseListener(this));
+                    add(translucentBlackMark);
+                }
 	            else
 	            {
 	                DrawRect emptyRect = new DrawRect(row, col);
 	                System.out.println(row + "," + col);
-	                emptyRect.addMouseListener(new CustomMouseListener());
+	                emptyRect.addMouseListener(new CustomMouseListener(this));
 	                add(emptyRect);
 	            }
 	        }    
 	    }
     }
+	
+	@Override
+	public void repaint() {
+		super.repaint();
+		draw();
+	}
 }
 class DrawRect extends JPanel{
     public DrawRect(int row, int col) {
@@ -111,6 +135,50 @@ class DrawBlack extends JPanel{
 
 }    
 }
+/**added this in, Jason*/
+class DrawTranslucentWhite extends JPanel{
+    public DrawTranslucentWhite(int row, int col) {
+        this.row = row;
+        this.col = col;
+    }
+    int row;
+    int col;
+
+    @Override
+    protected void paintComponent (Graphics g){
+        super.paintComponent(g);
+        g.setColor(Color.GREEN);
+        g.fillRect(0, 0, getWidth(), getHeight()); //fills the rectangles green
+        g.setColor(Color.WHITE);
+        g.drawOval(0, 0, getWidth(), getHeight());
+        //add the square with the specified color
+        g.setColor(Color.BLACK);
+        g.drawRect(0, 0, getWidth(), getHeight());
+    }
+}
+//for potential moves
+/**added this in, Jason*/
+class DrawTranslucentBlack extends JPanel{
+    public DrawTranslucentBlack(int row, int col) {
+        this.row = row;
+        this.col = col;
+    }
+    int row;
+    int col;
+
+    @Override
+    protected void paintComponent (Graphics g){
+        super.paintComponent(g);
+        g.setColor(Color.GREEN);
+        g.fillRect(0, 0, getWidth(), getHeight()); //fills the rectangles green
+        g.setColor(Color.BLACK);
+        g.drawOval(0, 0, getWidth(), getHeight());
+        //add the square with the specified color
+        g.setColor(Color.BLACK);
+        g.drawRect(0, 0, getWidth(), getHeight());
+    }
+}
+
 
 class DrawWhite extends JPanel{
     public DrawWhite(int row, int col) {
@@ -134,9 +202,19 @@ class DrawWhite extends JPanel{
 }
         
 class CustomMouseListener implements MouseListener{
-    public void mouseClicked(MouseEvent e) {       
+	Chessboard chessboard;
+    public CustomMouseListener(Chessboard chessboard) {
+    	this.chessboard = chessboard;
+    }
+
+	public void mouseClicked(MouseEvent e) {       
     	System.out.println(((DrawRect)e.getSource()).row + "," + ((DrawRect)e.getSource()).col);
-    	DrawBlack drawBlack = new DrawBlack(((DrawRect)e.getSource()).row, ((DrawRect)e.getSource()).col);
+    	GameClient.getInstance().handleMakeAMove(((DrawRect)e.getSource()).row,((DrawRect)e.getSource()).col);
+//    	DrawBlack drawBlack = new DrawBlack(((DrawRect)e.getSource()).row, ((DrawRect)e.getSource()).col);
+//    	chessboard.remove((Component) e.getSource());
+//    	chessboard.add(drawBlack);
+//    	chessboard.revalidate();
+//    	chessboard.repaint();
     }
 
     public void mousePressed(MouseEvent e) {

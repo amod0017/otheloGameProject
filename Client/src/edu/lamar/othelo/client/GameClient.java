@@ -24,54 +24,29 @@ public class GameClient extends AbstractClient {
 	LoginUI loginUI;
 	GUI gameUI = null;
 	static GameClient instance;
+
+	private static LoginUI loginUi;
 	private String[] serverArgs = new String[MAX_ARGS];
 
 	private GameClient(final String host, final int port) throws IOException {
 		super(host, port);
 		openConnection();
 	}
-	
+
 	public static GameClient getInstance(final String host, final int port){
 		try {
-		if (instance== null) {
-			return new GameClient(host, port);
-		}
-		return instance;
-		} catch (IOException e) {
+			if (instance== null) {
+				instance = new GameClient(host, port);
+			}
+			return instance;
+		} catch (final IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	//FIXME this should be removed as constructor should only do one thing.
-
-	//	public GameClient(String host, int port, String username, String password,
-	//			String kind) throws IOException {
-	//
-	//		super(host, port);
-	//
-	//		try {
-	//			openConnection();
-	//		} catch (ConnectException ce) {
-	//			JOptionPane
-	//					.showMessageDialog(
-	//							null,
-	//							"Could not find a server on the specified address and port.\nPlease ensure you have the right address and port.");
-	//		}
-	//
-	//		this.username = username;
-	//		this.password = password;
-	//		this.host = host;
-	//		this.port = port;
-	//
-	//		// e.g. register_jason_password
-	//		// e.g. login_jason_password
-	//
-	//		sendToServer(kind + "_" + username + "_" + password);
-	//	}
-
 	public static void main(final String[] args) throws IOException {
-		new LoginUI();
+		loginUi = new LoginUI();
 	}
 
 	public void quit() throws IOException {
@@ -79,11 +54,11 @@ public class GameClient extends AbstractClient {
 		System.exit(0);
 	}
 
+	@SuppressWarnings("static-access")
 	@Override
 	public void handleMessageFromServer(final Object msg) {
 		System.out.println("msg recived" + msg);
 		serverArgs = msg.toString().split("_");
-		boolean isGameStarted = false;
 		switch (serverArgs[0]) {
 		case "login":
 			if (serverArgs[1].equals("success"))
@@ -126,24 +101,25 @@ public class GameClient extends AbstractClient {
 			}
 			System.out.println("creating game UI");
 			gameUI = new GUI();
-			isGameStarted = true;
+			loginUi.frame.setVisible(false);
 			break;
 		case "move":
 			final int row = Integer.parseInt(serverArgs[1]);
 			final int column = Integer.parseInt(serverArgs[2]);
-			gameUI.setSpace(foe, row, column);
+			if (serverArgs[3].equals(username)) {
+				gameUI.setSpace(friend, row, column);
+				GUI.drawBoard(gameUI.board);
+			}else{
+				gameUI.setSpace(foe, row, column);
+				GUI.drawBoard(gameUI.board);
+			}
 			break;
 		case "wait":
-			//while(!isGameStarted){
-				try {
-					System.out.println("waiting");
-					Thread.sleep(10000);
-					//sendToServer(new MessageImpl("startGame","game",username,null,null));
-				} catch (final InterruptedException e) {
-					e.printStackTrace();
-				//} catch (final IOException e) {
-					e.printStackTrace();
-				}
+			System.out.println("waiting");
+			JOptionPane.showMessageDialog(loginUi.frame, "Waiting for other player to play the game.");
+			// Thread.sleep(10000);
+			// sendToServer(new
+			// MessageImpl("startGame","game",username,null,null));
 
 			//}
 		}
@@ -167,6 +143,18 @@ public class GameClient extends AbstractClient {
 	public void login(final String username2, final String pd) {
 		try {
 			sendToServer(new MessageImpl("login"+"_"+pd, "Login", username2, null, pd));
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static GameClient getInstance() {
+		return instance;
+	}
+
+	public void handleMakeAMove(final int row, final int col) {
+		try {
+			sendToServer(new MessageImpl("makeAMove", "game", username, row+ "," + col, null));
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
