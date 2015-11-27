@@ -2,7 +2,7 @@ package edu.lamar.othelo.client;
 import javax.swing.SwingUtilities;
 
 public class GUI {
-	private static Chessboard chessboard;
+	private static OtheloUI chessboard;
 	public enum SpaceState {
 		empty, black, white
 	}
@@ -49,10 +49,18 @@ public class GUI {
 	public static void drawBoard(final SpaceState[][] gameBoard)
 	{
 		if (chessboard!=null) {
-			chessboard.dispose();
-			// return;
+			//chessboard.dispose();
+			//			SwingUtilities.updateComponentTreeUI(chessboard);
+			//			chessboard.invalidate();
+			//			chessboard.validate();
+			chessboard.repaint();
+			return;
 		}
-		chessboard = new Chessboard(gameBoard);
+		chessboard = new OtheloUI(gameBoard);
+	}
+
+	public static void test(final int row, final int col, final String color){
+		chessboard.update(row,col, color);
 	}
 
 }

@@ -25,9 +25,7 @@ public class OtheloUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private final SpaceState[][] board;
 	private final JLabel[][] panelsOnBoard = new JLabel[8][8];
-	private static ImageIcon white = new ImageIcon("images/white.gif", "white");
-	private static ImageIcon black = new ImageIcon("images/black.gif", "black");
-	private static ImageIcon empty = new ImageIcon("images/empty.gif", "empty");
+
 
 	public OtheloUI(final SpaceState[][] board) {
 		this.board = board;
@@ -73,19 +71,19 @@ public class OtheloUI extends JFrame {
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
 				if (board[row][col] == SpaceState.black) {
-					panelsOnBoard[row][col] = new JLabel(black);
+					panelsOnBoard[row][col] = new BlackLabel(row, col);
 					panelsOnBoard[row][col].addMouseListener(new OtheloMouseListener(this));
 					panelsOnBoard[row][col].setPreferredSize(new Dimension(50, 50));
 					panelsOnBoard[row][col].setBorder(BorderFactory.createLineBorder(Color.black));
 					add(panelsOnBoard[row][col]);
 				} else if (board[row][col] == SpaceState.white) {
-					panelsOnBoard[row][col] = new JLabel(white);
+					panelsOnBoard[row][col] = new WhiteLabel(row, col);
 					panelsOnBoard[row][col].addMouseListener(new OtheloMouseListener(this));
 					panelsOnBoard[row][col].setPreferredSize(new Dimension(50, 50));
 					panelsOnBoard[row][col].setBorder(BorderFactory.createLineBorder(Color.black));
 					add(panelsOnBoard[row][col]);
 				} else {
-					panelsOnBoard[row][col] = new JLabel(empty);
+					panelsOnBoard[row][col] = new EmptyLabel(row, col);
 					panelsOnBoard[row][col].addMouseListener(new OtheloMouseListener(this));
 					panelsOnBoard[row][col].setPreferredSize(new Dimension(50, 50));
 					panelsOnBoard[row][col].setBorder(BorderFactory.createLineBorder(Color.black));
@@ -107,33 +105,13 @@ public class OtheloUI extends JFrame {
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
 				if ((row == rowNeedsToBeUpdated) && (col == colNeedsToBeUpdated)) {
-
-					// if (color == "white") {
-					// final Point point =
-					// panelsOnBoard[row][col].getLocation();
-					// remove(panelsOnBoard[row][col]);
-					// System.out.println("Drawing color " + color + "on
-					// row,col" + row + "," + col);
-					// final DrawWhite whiteMark = new
-					// DrawWhite(rowNeedsToBeUpdated, colNeedsToBeUpdated);
-					// whiteMark.addMouseListener(new
-					// OtheloMouseListener(this));
-					// whiteMark.setLocation(point);
-					// whiteMark.setLayout(null);
-					// add(whiteMark);
-					// panelsOnBoard[row][col] = whiteMark;
-					// }
-					// if (color == "black") {
-					// final Point point =
-					// panelsOnBoard[row][col].getLocation();
-					// remove(panelsOnBoard[row][col]);
-					// final DrawBlack blackMark = new DrawBlack(row, col);
-					// blackMark.addMouseListener(new
-					// OtheloMouseListener(this));
-					// add(blackMark);
-					// panelsOnBoard[row][col] = blackMark;
-					// blackMark.setLocation(point);
-					// }
+					if (color.equals("white")) {
+						panelsOnBoard[row][col].setIcon(WhiteLabel.white);
+					} else if (color.equals("black")) {
+						panelsOnBoard[row][col].setIcon(BlackLabel.black);
+					} else if (color.equals("empty")) {
+						panelsOnBoard[row][col].setIcon(EmptyLabel.empty);
+					}
 					break;
 				}
 			}
@@ -142,7 +120,81 @@ public class OtheloUI extends JFrame {
 	}
 }
 
+class WhiteLabel extends JLabel implements MyLabel {
+	int row;
+	int col;
+	private static final long serialVersionUID = 1L;
+	public static ImageIcon white = new ImageIcon("images/white.gif", "white");
 
+	public WhiteLabel(final int row, final int col) {
+		super(white);
+		this.row = row;
+		this.col = col;
+	}
+
+	@Override
+	public int getRow() {
+		return row;
+	}
+
+	@Override
+	public int getCol() {
+		return col;
+	}
+
+}
+
+class BlackLabel extends JLabel implements MyLabel {
+	int row;
+	int col;
+	private static final long serialVersionUID = 1L;
+	static ImageIcon black = new ImageIcon("images/black.gif", "black");
+
+	public BlackLabel(final int row, final int col) {
+		super(black);
+		this.row = row;
+		this.col = col;
+	}
+
+	@Override
+	public int getRow() {
+		return row;
+	}
+
+	@Override
+	public int getCol() {
+		return col;
+	}
+}
+
+interface MyLabel {
+	int getRow();
+
+	int getCol();
+}
+
+class EmptyLabel extends JLabel implements MyLabel {
+	int row;
+	int col;
+	private static final long serialVersionUID = 1L;
+	static ImageIcon empty = new ImageIcon("images/empty.gif", "empty");
+
+	public EmptyLabel(final int row, final int col) {
+		super(empty);
+		this.row = row;
+		this.col = col;
+	}
+
+	@Override
+	public int getRow() {
+		return row;
+	}
+
+	@Override
+	public int getCol() {
+		return col;
+	}
+}
 class OtheloMouseListener implements MouseListener {
 	OtheloUI chessboard;
 
@@ -152,11 +204,8 @@ class OtheloMouseListener implements MouseListener {
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
-		System.out.println(e.getSource());
-		// System.out.println(((DrawRect) e.getSource()).row + "," + ((DrawRect)
-		// e.getSource()).col);
-		// GameClient.getInstance().handleMakeAMove(((DrawRect)
-		// e.getSource()).row, ((DrawRect) e.getSource()).col);
+		GameClient.getInstance().handleMakeAMove(((MyLabel) e.getSource()).getRow(),
+				((MyLabel) e.getSource()).getCol());
 	}
 
 	@Override
