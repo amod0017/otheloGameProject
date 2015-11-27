@@ -6,15 +6,17 @@ package edu.lamar.othelo.client;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 /**
  * @author agehlot
  *
  */
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -25,6 +27,7 @@ public class OtheloUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private final SpaceState[][] board;
 	private final JLabel[][] panelsOnBoard = new JLabel[8][8];
+	public static JButton quitButton = new JButton("Quit"); //button for quitting  was added, check GUI for actual usage
 
 
 	public OtheloUI(final SpaceState[][] board) {
@@ -63,7 +66,13 @@ public class OtheloUI extends JFrame {
 				add(new JLabel("Black:", SwingConstants.CENTER));
 			} else if (topRowCount == 3) {
 				add(new JLabel(Integer.toString(blackCounter), SwingConstants.CENTER));
-			} else {
+			} else if (topRowCount == 4) { //this sets the button on the upper row
+				quitButton.setFocusPainted(false);
+				quitButton.setMargin( new Insets(0, 0, 0, 0) );
+				add(quitButton);
+			}
+
+			else {
 				add(new JLabel(""));
 			}
 		}

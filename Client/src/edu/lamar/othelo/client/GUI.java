@@ -1,4 +1,8 @@
 package edu.lamar.othelo.client;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class GUI {
@@ -7,10 +11,7 @@ public class GUI {
 		empty, black, white
 	}
 
-	SpaceState[][] board = new SpaceState[8][8];
-
-
-
+	static SpaceState[][] board = new SpaceState[8][8];
 
 	GUI ()
 	{
@@ -61,6 +62,27 @@ public class GUI {
 
 	public static void test(final int row, final int col, final String color){
 		chessboard.update(row,col, color);
+		chessboard.dispose();
+		//chessboard.draw();
+		//chessboard.revalidate();
+		// return;
+		chessboard = new OtheloUI(board);
+		OtheloUI.quitButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(final ActionEvent e) //needs to tell the server it quit as well
+			{
+				final int n = JOptionPane.showConfirmDialog(
+						chessboard,
+						"Are you sure you want to quit? This will cause you to forfeit the game!",
+						"Warning!",
+						JOptionPane.YES_NO_OPTION);
+
+				if(n == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+			}
+		});
 	}
 
 }
