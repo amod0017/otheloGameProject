@@ -19,6 +19,8 @@ public class GameClient extends AbstractClient {
 
 	public GUI.SpaceState friend;
 	public GUI.SpaceState foe;
+	String myColor = null;
+	String opponentColor = null;
 
 	//GUI gameUI;
 	LoginUI loginUI;
@@ -59,6 +61,7 @@ public class GameClient extends AbstractClient {
 	public void handleMessageFromServer(final Object msg) {
 		System.out.println("msg recived" + msg);
 		serverArgs = msg.toString().split("_");
+	
 		switch (serverArgs[0]) {
 		case "login":
 			if (serverArgs[1].equals("success"))
@@ -92,12 +95,16 @@ public class GameClient extends AbstractClient {
 			break;
 		case "start":
 			if (serverArgs[1].equals("black")) {
+				myColor = "black";
+				opponentColor = "white";
 				friend = GUI.SpaceState.black;
 				foe = GUI.SpaceState.white;
 			}
 			if (serverArgs[1].equals("white")) {
 				friend = GUI.SpaceState.white;
 				foe = GUI.SpaceState.black;
+				myColor = "white";
+				opponentColor = "black";
 			}
 			System.out.println("creating game UI");
 			gameUI = new GUI();
@@ -107,11 +114,11 @@ public class GameClient extends AbstractClient {
 			final int row = Integer.parseInt(serverArgs[1]);
 			final int column = Integer.parseInt(serverArgs[2]);
 			if (serverArgs[3].equals(username)) {
-				gameUI.setSpace(friend, row, column);
-				GUI.drawBoard(gameUI.board);
+				//gameUI.setSpace(friend, row, column);
+				//GUI.drawBoard(gameUI.board);
+				GUI.update(row, column, myColor);
 			}else{
-				gameUI.setSpace(foe, row, column);
-				GUI.drawBoard(gameUI.board);
+				GUI.update(row, column, opponentColor);
 			}
 			break;
 		case "wait":

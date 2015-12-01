@@ -59,6 +59,10 @@ public class GUI {
 		}
 		chessboard = new OtheloUI(gameBoard);
 	}
+	
+	public static void update(int row, int col, String color){
+		chessboard.update(row, col, color);
+	}
 
 	public static void test(final int row, final int col, final String color){
 		chessboard.update(row,col, color);

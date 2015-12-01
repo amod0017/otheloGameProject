@@ -143,13 +143,17 @@ public class GameServer extends AbstractServer {
 			}
 
 		} else {
+			/*
+			 * do nothing 
+			 */
+			
 			// move was not successful
-			try {
-				client.sendToClient("move_nothing");
-				connectedClient.get(oppositionPlayerLoginId).sendToClient("move_nothing");
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}// client should understand this and should not move
+//			try {
+//				//client.sendToClient("move_nothing");
+////				connectedClient.get(oppositionPlayerLoginId).sendToClient("move_nothing");
+//			} catch (final IOException e) {
+//				e.printStackTrace();
+//			}// client should understand this and should not move
 			// anything. Can show a pop if needed.
 		}
 	}

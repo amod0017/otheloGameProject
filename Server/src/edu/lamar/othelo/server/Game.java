@@ -81,7 +81,7 @@ class Game {
 			current = (current == SpaceState.black) ? SpaceState.white : SpaceState.black;
 			return true;
 		} else {
-			return false;
+			return true;
 		}
 	}
 
