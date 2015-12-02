@@ -70,7 +70,6 @@ public class OtheloUI extends JFrame {
                 quitButton.setMargin(new Insets(0,0,0,0));
                 add(quitButton);
 			}
-
 			else {
 				add(new JLabel(""));
 			}

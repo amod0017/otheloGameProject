@@ -100,7 +100,7 @@ public class GUI {
 
 				if(n == JOptionPane.YES_OPTION) {
 					//GameClient.getInstance().SendQuitMessageToServer??
-
+                    //plug it in here?
 					System.exit(0);
 				}
 			}
