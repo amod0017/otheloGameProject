@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -14,12 +16,7 @@ import java.awt.event.MouseListener;
  * @author agehlot
  *
  */
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import edu.lamar.othelo.client.GUI.SpaceState;
 
@@ -44,6 +41,8 @@ public class OtheloUI extends JFrame {
 		setTitle("Othello");
 		setResizable(false);
 
+
+
 		int blackCounter = 0;
 		int whiteCounter = 0;
 
@@ -66,10 +65,10 @@ public class OtheloUI extends JFrame {
 				add(new JLabel("Black:", SwingConstants.CENTER));
 			} else if (topRowCount == 3) {
 				add(new JLabel(Integer.toString(blackCounter), SwingConstants.CENTER));
-			} else if (topRowCount == 4) { //this sets the button on the upper row
+			} else if (topRowCount == 7) { //this sets the button on the upper row
 				quitButton.setFocusPainted(false);
-				quitButton.setMargin( new Insets(0, 0, 0, 0) );
-				add(quitButton);
+                quitButton.setMargin(new Insets(0,0,0,0));
+                add(quitButton);
 			}
 
 			else {
@@ -133,7 +132,7 @@ class WhiteLabel extends JLabel implements MyLabel {
 	int row;
 	int col;
 	private static final long serialVersionUID = 1L;
-	public static ImageIcon white = new ImageIcon("images/white.gif", "white");
+	public static ImageIcon white = new ImageIcon("/home/colton/otheloGameProject/Client/images/white.gif", "white");
 
 	public WhiteLabel(final int row, final int col) {
 		super(white);
@@ -157,7 +156,7 @@ class BlackLabel extends JLabel implements MyLabel {
 	int row;
 	int col;
 	private static final long serialVersionUID = 1L;
-	static ImageIcon black = new ImageIcon("images/black.gif", "black");
+	static ImageIcon black = new ImageIcon("/home/colton/otheloGameProject/Client/images/black.gif", "black");
 
 	public BlackLabel(final int row, final int col) {
 		super(black);
@@ -186,7 +185,7 @@ class EmptyLabel extends JLabel implements MyLabel {
 	int row;
 	int col;
 	private static final long serialVersionUID = 1L;
-	static ImageIcon empty = new ImageIcon("images/empty.gif", "empty");
+	static ImageIcon empty = new ImageIcon("/home/colton/otheloGameProject/Client/images/empty.gif", "empty");
 
 	public EmptyLabel(final int row, final int col) {
 		super(empty);

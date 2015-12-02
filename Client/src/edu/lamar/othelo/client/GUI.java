@@ -58,6 +58,22 @@ public class GUI {
 			return;
 		}
 		chessboard = new OtheloUI(gameBoard);
+		chessboard.quitButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(final ActionEvent e) //needs to tell the server it quit as well
+			{
+				final int n = JOptionPane.showConfirmDialog(
+						chessboard,
+						"Are you sure you want to quit? This will cause you to forfeit the game!",
+						"Warning!",
+						JOptionPane.YES_NO_OPTION);
+
+				if(n == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+			}
+		});
 	}
 	
 	public static void update(int row, int col, String color){
@@ -71,7 +87,7 @@ public class GUI {
 		//chessboard.revalidate();
 		// return;
 		chessboard = new OtheloUI(board);
-		OtheloUI.quitButton.addActionListener(new ActionListener()
+		chessboard.quitButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(final ActionEvent e) //needs to tell the server it quit as well
@@ -83,6 +99,8 @@ public class GUI {
 						JOptionPane.YES_NO_OPTION);
 
 				if(n == JOptionPane.YES_OPTION) {
+					//GameClient.getInstance().SendQuitMessageToServer??
+
 					System.exit(0);
 				}
 			}
