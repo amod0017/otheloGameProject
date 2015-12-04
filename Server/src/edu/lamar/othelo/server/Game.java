@@ -89,7 +89,7 @@ class Game {
 		// TODO: First of all you should check whether player is allowed to move
 		// or not.
 		final Move move = new Move(xCoordinate, yCoordinate, player);
-		if (move.isValidMove() && current == player) {
+		if (current == player && move.isValidMove()) {
 			board[move.x][move.y] = current;
 			current = (current == SpaceState.black) ? SpaceState.white
 					: SpaceState.black;
@@ -159,13 +159,14 @@ class Game {
 				ix = x;
 				iy = y;
 				foundPiece = false;
+				
 				while (true) {
 					ix++;
 					if (foundPiece || !((0 <= ix) && (ix <= 7))
 							|| !((0 <= iy) && (iy <= 7)))
 						break;
 					if (board[ix][iy] == color) {
-						foundPiece = true;
+						foundPiece = true;break;
 					}
 				}
 
@@ -189,7 +190,7 @@ class Game {
 							|| !((0 <= iy) && (iy <= 7)))
 						break;
 					if (board[ix][iy] == color) {
-						foundPiece = true;
+						foundPiece = true;break;
 					}
 				}
 
@@ -213,7 +214,7 @@ class Game {
 							|| !((0 <= iy) && (iy <= 7)))
 						break;
 					if (board[ix][iy] == color) {
-						foundPiece = true;
+						foundPiece = true;break;
 					}
 				}
 
@@ -237,7 +238,7 @@ class Game {
 							|| !((0 <= iy) && (iy <= 7)))
 						break;
 					if (board[ix][iy] == color) {
-						foundPiece = true;
+						foundPiece = true;break;
 					}
 				}
 
@@ -261,7 +262,7 @@ class Game {
 							|| !((0 <= iy) && (iy <= 7)))
 						break;
 					if (board[ix][iy] == color) {
-						foundPiece = true;
+						foundPiece = true;break;
 					}
 				}
 
@@ -286,7 +287,7 @@ class Game {
 							|| !((0 <= iy) && (iy <= 7)))
 						break;
 					if (board[ix][iy] == color) {
-						foundPiece = true;
+						foundPiece = true;break;
 					}
 				}
 
@@ -311,7 +312,7 @@ class Game {
 							|| !((0 <= iy) && (iy <= 7)))
 						break;
 					if (board[ix][iy] == color) {
-						foundPiece = true;
+						foundPiece = true;break;
 					}
 				}
 
@@ -336,7 +337,7 @@ class Game {
 							|| !((0 <= iy) && (iy <= 7)))
 						break;
 					if (board[ix][iy] == color) {
-						foundPiece = true;
+						foundPiece = true;break;
 					}
 				}
 
