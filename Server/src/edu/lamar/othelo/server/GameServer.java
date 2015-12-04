@@ -123,8 +123,23 @@ public class GameServer extends AbstractServer {
 				.get(new GameId(connectedUsers.get(loginId), connectedUsers.get(oppositionPlayerLoginId)));
 		final String[] requestedCoordinates = ((MessageImpl) msg).getMakeAMoveCoordinates().split(",");
 		if (ongoingGame.makeMove(Integer.parseInt(requestedCoordinates[0]),
-				Integer.parseInt(requestedCoordinates[1]))) {
+				Integer.parseInt(requestedCoordinates[1]),loginId)) {
 			try {
+				int[][] myboard = ongoingGame.getBoard();
+				for (int a = 0; a < myboard.length; a++) {
+					for (int b = 0; b < myboard[a].length; b++){
+						if (myboard[a][b]==1) {
+							client.sendToClient("moves_"+a+"_"+b+"_"+"white");
+							connectedClient.get(oppositionPlayerLoginId).sendToClient("moves_"+a+"_"+b+"_"+"white");
+						}else if (myboard[a][b]==0) {
+							client.sendToClient("moves_"+a+"_"+b+"_"+"black");
+							connectedClient.get(oppositionPlayerLoginId).sendToClient("moves_"+a+"_"+b+"_"+"black");
+						}else{
+							client.sendToClient("moves_"+a+"_"+b+"_"+"empty");
+							connectedClient.get(oppositionPlayerLoginId).sendToClient("moves_"+a+"_"+b+"_"+"empty");
+						}
+					}
+				}
 				client.sendToClient("move_" + requestedCoordinates[0] + "_" + requestedCoordinates[1] + "_" + loginId); // client
 				// should
 				// understand

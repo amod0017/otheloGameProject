@@ -152,6 +152,18 @@ public class GameClient extends AbstractClient {
 			}
 			System.exit(0);
 			break;
+		case "moves":
+			final int row1 = Integer.parseInt(serverArgs[1]);
+			final int column1 = Integer.parseInt(serverArgs[2]);
+			if (serverArgs[3].equals("white")) {
+				GUI.update(row1, column1, "white");
+			}else if(serverArgs[3].equals("black")){
+				GUI.update(row1, column1, "black");
+			}else{
+				GUI.update(row1, column1, "empty");
+			}
+			break;
+			
 		}
 
 		// here's the idea, split the string and use args[0] as the command
