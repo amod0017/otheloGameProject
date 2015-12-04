@@ -18,7 +18,7 @@ class Game {
 	private int white_score;
 	private int black_score;
 	private final GameId id;
-	private SpaceState current;
+	private SpaceState current = SpaceState.black;
 
 	// constructor for Othello's starting position
 	Game(final User whitePlayer, final User blackPlayer) {
@@ -72,11 +72,15 @@ class Game {
 	}
 
 	// move is priavte and hence it should be created in the class.
-	boolean makeMove(final int xCoordinate, final int yCoordinate) {
+    boolean makeMove(final int xCoordinate, final int yCoordinate)
+    {
+        return makeMove(xCoordinate,yCoordinate,SpaceState.black);
+    }
+	boolean makeMove(final int xCoordinate, final int yCoordinate, SpaceState player) {
 		// TODO: First of all you should check whether player is allowed to move
 		// or not.
-		final Move move = new Move(xCoordinate, yCoordinate, current);
-		if (move.isValidMove()) {
+		final Move move = new Move(xCoordinate, yCoordinate, player);
+		if (move.isValidMove() && current == player) {
 			board[move.x][move.y] = current;
 			current = (current == SpaceState.black) ? SpaceState.white : SpaceState.black;
 			return true;
@@ -123,7 +127,7 @@ class Game {
 
 		boolean isValidMove() {
 
-			try {
+			{
 
 				// for each direction, iterate until you find a friendly piece
 				// if a friendly piece is found then convert all enemy pieces from
@@ -140,12 +144,12 @@ class Game {
 
 				//East check and sum
 				ix=x; iy=y;
-				do {
-					ix++;
-					if(board[ix][iy] != color) {
+                while(true){
+					ix++; if(foundPiece || !((0 <= ix) && (ix <= 7)) && ((0 <= iy) && (iy <= 7)))break;
+					if(board[ix][iy] == color) {
 						foundPiece = true;
 					}
-				}while(!foundPiece && ((0 <= ix) && (ix <= 7)) && ((0 <= iy) && (iy <= 7)));
+				}
 
 				if(foundPiece)
 				{
@@ -156,166 +160,7 @@ class Game {
 							board[ix][iy] = color;
 							captureSum++;
 						}
-					}while(board[ix][iy] != board[x][y]);
-				}
-
-				//South
-				ix=x; iy=y;
-				do {
-					iy++;
-					if(board[ix][iy] != color) {
-						foundPiece = true;
-					}
-				}while(!foundPiece && ((0 <= ix) && (ix <= 7)) && ((0 <= iy) && (iy <= 7)));
-
-				if(foundPiece)
-				{
-					do{
-						iy--;
-						if(board[ix][iy] == enemycolor)
-						{
-							board[ix][iy] = color;
-							captureSum++;
-						}
-					}while(board[ix][iy] != board[x][y]);
-				}
-
-
-				//West check and sum
-				ix=x; iy=y;
-				do {
-					ix--;
-					if(board[ix][iy] != color) {
-						foundPiece = true;
-					}
-				}while(!foundPiece && ((1 <= ix) && (ix <= 8)) && ((1 <= iy) && (iy <= 8)));
-
-				if(foundPiece)
-				{
-					do{
-						ix++;
-						if(board[ix][iy] == enemycolor)
-						{
-							board[ix][iy] = color;
-							captureSum++;
-						}
-					}while(board[ix][iy] != board[x][y]);
-				}
-
-
-				//North
-				ix=x; iy=y;
-				do {
-					iy--;
-					if(board[ix][iy] != color) {
-						foundPiece = true;
-					}
-				}while(!foundPiece && ((1 <= ix) && (ix <= 8)) && ((1 <= iy) && (iy <= 8)));
-
-				if(foundPiece)
-				{
-					do{
-						iy++;
-						if(board[ix][iy] == enemycolor)
-						{
-							board[ix][iy] = color;
-							captureSum++;
-						}
-					}while(board[ix][iy] != board[x][y]);
-				}
-
-
-				//Northwest
-				ix=x; iy=y;
-				do {
-					ix--;
-					iy--;
-					if(board[ix][iy] != color) {
-						foundPiece = true;
-					}
-				}while(!foundPiece && ((1 <= ix) && (ix <= 8)) && ((1 <= iy) && (iy <= 8)));
-
-				if(foundPiece)
-				{
-					do{
-						ix++;
-						iy++;
-						if(board[ix][iy] == enemycolor)
-						{
-							board[ix][iy] = color;
-							captureSum++;
-						}
-					}while(board[ix][iy] != board[x][y]);
-				}
-
-				//Southeast
-				ix=x; iy=y;
-				do {
-					ix++;
-					iy++;
-					if(board[ix][iy] != color) {
-						foundPiece = true;
-					}
-				}while(!foundPiece && ((1 <= ix) && (ix <= 8)) && ((1 <= iy) && (iy <= 8)));
-
-				if(foundPiece)
-				{
-					do{
-						ix--;
-						iy--;
-						if(board[ix][iy] == enemycolor)
-						{
-							board[ix][iy] = color;
-							captureSum++;
-						}
-					}while(board[ix][iy] != board[x][y]);
-				}
-
-				//Southwest
-				ix=x; iy=y;
-				do {
-					ix--;
-					iy++;
-					if(board[ix][iy] != color) {
-						foundPiece = true;
-					}
-				}while(!foundPiece && ((1 <= ix) && (ix <= 8)) && ((1 <= iy) && (iy <= 8)));
-
-				if(foundPiece)
-				{
-					do{
-						ix++;
-						iy--;
-						if(board[ix][iy] == enemycolor)
-						{
-							board[ix][iy] = color;
-							captureSum++;
-						}
-					}while(board[ix][iy] != board[x][y]);
-				}
-
-
-				//Northeast
-				ix=x; iy=y;
-				do {
-					ix++;
-					iy--;
-					if(board[ix][iy] != color) {
-						foundPiece = true;
-					}
-				}while(!foundPiece && ((1 <= ix) && (ix <= 8)) && ((1 <= iy) && (iy <= 8)));
-
-				if(foundPiece)
-				{
-					do{
-						ix--;
-						iy++;
-						if(board[ix][iy] == enemycolor)
-						{
-							board[ix][iy] = color;
-							captureSum++;
-						}
-					}while(board[ix][iy] != board[x][y]);
+					}while(ix != x && iy != y);
 				}
 
 				if(captureSum == 0) {
@@ -328,8 +173,6 @@ class Game {
 				}
 
 
-			} catch (final Exception e) {
-				return true;
 			}
 
 		}
