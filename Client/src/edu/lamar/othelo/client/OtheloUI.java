@@ -28,10 +28,15 @@ public class OtheloUI extends JFrame {
 	private final SpaceState[][] board;
 	private final JLabel[][] panelsOnBoard = new JLabel[8][8];
 	public static JButton quitButton = new JButton("Quit"); //button for quitting  was added, check GUI for actual usage
+	private final String loginId;
+	private final String color;
 
 
-	public OtheloUI(final SpaceState[][] board) {
+	public OtheloUI(final SpaceState[][] board, final String username) {
 		this.board = board;
+		final String[] inputFromUser = username.split("_");
+		loginId = inputFromUser[0];
+		color = inputFromUser[1];
 		draw();
 	}
 
@@ -40,12 +45,9 @@ public class OtheloUI extends JFrame {
 		this.setSize(400, 450);
 		setBackground(Color.GREEN);
 		setVisible(true);
-		new JFrame("Othello");
-		setTitle("Othello");
+		new JFrame("Othello " + loginId);
+		setTitle("Hello " + loginId);
 		setResizable(false);
-
-
-
 		int blackCounter = 0;
 		int whiteCounter = 0;
 
@@ -61,11 +63,20 @@ public class OtheloUI extends JFrame {
 
 		for (int topRowCount = 0; topRowCount < 8; topRowCount++) {
 			if (topRowCount == 0) {
-				add(new JLabel("White:", SwingConstants.CENTER));
+				if (color.equalsIgnoreCase("white")) {
+					add(new JLabel(loginId, SwingConstants.CENTER));
+				} else {
+					add(new JLabel("White:", SwingConstants.CENTER));
+				}
 			} else if (topRowCount == 1) {
 				add(new JLabel(Integer.toString(whiteCounter), SwingConstants.CENTER));
 			} else if (topRowCount == 2) {
-				add(new JLabel("Black:", SwingConstants.CENTER));
+				if (color.equalsIgnoreCase("black")) {
+					add(new JLabel(loginId, SwingConstants.CENTER));
+				} else {
+					add(new JLabel("Black:", SwingConstants.CENTER));
+				}
+
 			} else if (topRowCount == 3) {
 				add(new JLabel(Integer.toString(blackCounter), SwingConstants.CENTER));
 			} else if (topRowCount == 7) { //this sets the button on the upper row

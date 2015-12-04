@@ -6,17 +6,19 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class GUI {
-	private static OtheloUI chessboard;
+	static OtheloUI chessboard;
+	private static GameClient gameClient;
 	public enum SpaceState {
 		empty, black, white
 	}
 
 	static SpaceState[][] board = new SpaceState[8][8];
 
-	GUI ()
+	GUI(final String username, final GameClient caller)
 	{
+		gameClient = caller;
 		initializeGUI();
-		drawBoard(board);
+		drawBoard(board, username);
 	}
 
 	public final void initializeGUI()
@@ -42,12 +44,13 @@ public class GUI {
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run() {
-				new GUI();
+				// new GUI();
 			}
 		});
 	}
 
-	public static void drawBoard(final SpaceState[][] gameBoard)
+	public static void drawBoard(final SpaceState[][] gameBoard,
+			final String username)
 	{
 		if (chessboard!=null) {
 			//chessboard.dispose();
@@ -57,8 +60,8 @@ public class GUI {
 			chessboard.repaint();
 			return;
 		}
-		chessboard = new OtheloUI(gameBoard);
-		chessboard.quitButton.addActionListener(new ActionListener()
+		chessboard = new OtheloUI(gameBoard, username);
+		OtheloUI.quitButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(final ActionEvent e) //needs to tell the server it quit as well
@@ -70,41 +73,22 @@ public class GUI {
 						JOptionPane.YES_NO_OPTION);
 
 				if(n == JOptionPane.YES_OPTION) {
-					System.exit(0);
+					gameClient.sendQuit();
+					// System.exit(0);
 				}
 			}
 		});
 	}
-	
-	public static void update(int row, int col, String color){
+
+	public static void update(final int row, final int col, final String color){
 		chessboard.update(row, col, color);
 	}
 
-	public static void test(final int row, final int col, final String color){
-		chessboard.update(row,col, color);
-		chessboard.dispose();
-		//chessboard.draw();
-		//chessboard.revalidate();
-		// return;
-		chessboard = new OtheloUI(board);
-		chessboard.quitButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(final ActionEvent e) //needs to tell the server it quit as well
-			{
-				final int n = JOptionPane.showConfirmDialog(
-						chessboard,
-						"Are you sure you want to quit? This will cause you to forfeit the game!",
-						"Warning!",
-						JOptionPane.YES_NO_OPTION);
+	public static void test(final int row, final int col, final String color) {
+	}
 
-				if(n == JOptionPane.YES_OPTION) {
-					//GameClient.getInstance().SendQuitMessageToServer??
-                    //plug it in here?
-					System.exit(0);
-				}
-			}
-		});
+	public void setVisible(final String string) {
+		chessboard.setVisible(false);
 	}
 
 }

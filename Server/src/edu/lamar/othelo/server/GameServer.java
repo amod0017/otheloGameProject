@@ -102,7 +102,9 @@ public class GameServer extends AbstractServer {
 
 		} else if (((MessageImpl) msg).getMessage().equalsIgnoreCase("QUIT")) {
 			try {
-				client.sendToClient("Lost");
+				client.sendToClient("lost");
+				connectedClient.get(playingWithInfo.get(loginId)).sendToClient(
+						"won");
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -144,16 +146,16 @@ public class GameServer extends AbstractServer {
 
 		} else {
 			/*
-			 * do nothing 
+			 * do nothing
 			 */
-			
+
 			// move was not successful
-//			try {
-//				//client.sendToClient("move_nothing");
-////				connectedClient.get(oppositionPlayerLoginId).sendToClient("move_nothing");
-//			} catch (final IOException e) {
-//				e.printStackTrace();
-//			}// client should understand this and should not move
+			//			try {
+			//				//client.sendToClient("move_nothing");
+			////				connectedClient.get(oppositionPlayerLoginId).sendToClient("move_nothing");
+			//			} catch (final IOException e) {
+			//				e.printStackTrace();
+			//			}// client should understand this and should not move
 			// anything. Can show a pop if needed.
 		}
 	}

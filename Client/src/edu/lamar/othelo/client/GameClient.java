@@ -61,7 +61,7 @@ public class GameClient extends AbstractClient {
 	public void handleMessageFromServer(final Object msg) {
 		System.out.println("msg recived" + msg);
 		serverArgs = msg.toString().split("_");
-	
+
 		switch (serverArgs[0]) {
 		case "login":
 			if (serverArgs[1].equals("success"))
@@ -107,7 +107,7 @@ public class GameClient extends AbstractClient {
 				opponentColor = "black";
 			}
 			System.out.println("creating game UI");
-			gameUI = new GUI();
+			gameUI = new GUI(username + "_" + myColor, this);
 			loginUi.frame.setVisible(false);
 			break;
 		case "move":
@@ -124,11 +124,34 @@ public class GameClient extends AbstractClient {
 		case "wait":
 			System.out.println("waiting");
 			JOptionPane.showMessageDialog(loginUi.frame, "Waiting for other player to play the game.");
+			break;
 			// Thread.sleep(10000);
 			// sendToServer(new
 			// MessageImpl("startGame","game",username,null,null));
 
 			//}
+		case "lost":
+			JOptionPane.showMessageDialog(GUI.chessboard,
+					"You lost the game. You won the game. Please come back again to keep playing");
+			gameUI.setVisible("false");
+			try {
+				closeConnection();
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+			System.exit(0);
+			break;
+		case "won":
+			JOptionPane.showMessageDialog(GUI.chessboard,
+					"You won the game. Please come back again to keep playing");
+			gameUI.setVisible("false");
+			try {
+				closeConnection();
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+			System.exit(0);
+			break;
 		}
 
 		// here's the idea, split the string and use args[0] as the command
@@ -162,6 +185,14 @@ public class GameClient extends AbstractClient {
 	public void handleMakeAMove(final int row, final int col) {
 		try {
 			sendToServer(new MessageImpl("makeAMove", "game", username, row+ "," + col, null));
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void sendQuit() {
+		try {
+			sendToServer(new MessageImpl("quit", "game", username, null, null));
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
