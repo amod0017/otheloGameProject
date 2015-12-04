@@ -230,6 +230,90 @@ class Game {
                     }while(ix != x || iy != y);
                 }
 
+                ix=x; iy=y;
+                foundPiece = false;
+                while(true){
+                    iy--;ix--; if(foundPiece || !((0 <= ix) && (ix <= 7)) || !((0 <= iy) && (iy <= 7)) )break;
+                    if(board[ix][iy] == color) {
+                        foundPiece = true;
+                    }
+                }
+
+                if(foundPiece)
+                {
+                    do{
+                        iy++;ix++;
+                        if(board[ix][iy] == enemycolor)
+                        {
+                            board[ix][iy] = color;
+                            captureSum++;
+                        }
+                    }while(ix != x || iy != y);
+                }
+
+                ix=x; iy=y;
+                foundPiece = false;
+                while(true){
+                    iy++;ix++; if(foundPiece || !((0 <= ix) && (ix <= 7)) || !((0 <= iy) && (iy <= 7)) )break;
+                    if(board[ix][iy] == color) {
+                        foundPiece = true;
+                    }
+                }
+
+                if(foundPiece)
+                {
+                    do{
+                        iy--;ix--;
+                        if(board[ix][iy] == enemycolor)
+                        {
+                            board[ix][iy] = color;
+                            captureSum++;
+                        }
+                    }while(ix != x || iy != y);
+                }
+
+                ix=x; iy=y;
+                foundPiece = false;
+                while(true){
+                    iy--;ix++; if(foundPiece || !((0 <= ix) && (ix <= 7)) || !((0 <= iy) && (iy <= 7)) )break;
+                    if(board[ix][iy] == color) {
+                        foundPiece = true;
+                    }
+                }
+
+                if(foundPiece)
+                {
+                    do{
+                        iy++;ix--;
+                        if(board[ix][iy] == enemycolor)
+                        {
+                            board[ix][iy] = color;
+                            captureSum++;
+                        }
+                    }while(ix != x || iy != y);
+                }
+
+                ix=x; iy=y;
+                foundPiece = false;
+                while(true){
+                    iy++;ix--; if(foundPiece || !((0 <= ix) && (ix <= 7)) || !((0 <= iy) && (iy <= 7)) )break;
+                    if(board[ix][iy] == color) {
+                        foundPiece = true;
+                    }
+                }
+
+                if(foundPiece)
+                {
+                    do{
+                        iy--;ix++;
+                        if(board[ix][iy] == enemycolor)
+                        {
+                            board[ix][iy] = color;
+                            captureSum++;
+                        }
+                    }while(ix != x || iy != y);
+                }
+
 
 
 
