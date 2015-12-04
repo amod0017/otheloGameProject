@@ -7,16 +7,19 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 /**
  * @author agehlot
  *
  */
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import edu.lamar.othelo.client.GUI.SpaceState;
 
@@ -67,8 +70,8 @@ public class OtheloUI extends JFrame {
 				add(new JLabel(Integer.toString(blackCounter), SwingConstants.CENTER));
 			} else if (topRowCount == 7) { //this sets the button on the upper row
 				quitButton.setFocusPainted(false);
-                quitButton.setMargin(new Insets(0,0,0,0));
-                add(quitButton);
+				quitButton.setMargin(new Insets(0,0,0,0));
+				add(quitButton);
 			}
 			else {
 				add(new JLabel(""));
@@ -131,7 +134,24 @@ class WhiteLabel extends JLabel implements MyLabel {
 	int row;
 	int col;
 	private static final long serialVersionUID = 1L;
-	public static ImageIcon white = new ImageIcon("/home/colton/otheloGameProject/Client/images/white.gif", "white");
+	public static ImageIcon white = new ImageIcon("images/white.gif", "white"); // This
+	// will
+	// only
+	// work
+	// in
+	// windows.
+	// For
+	// testing
+	// in
+	// linux
+	// change
+	// the
+	// path
+	// but
+	// don't
+	// push
+	// the
+	// changes
 
 	public WhiteLabel(final int row, final int col) {
 		super(white);
@@ -155,7 +175,7 @@ class BlackLabel extends JLabel implements MyLabel {
 	int row;
 	int col;
 	private static final long serialVersionUID = 1L;
-	static ImageIcon black = new ImageIcon("/home/colton/otheloGameProject/Client/images/black.gif", "black");
+	static ImageIcon black = new ImageIcon("images/black.gif", "black");
 
 	public BlackLabel(final int row, final int col) {
 		super(black);
@@ -184,7 +204,7 @@ class EmptyLabel extends JLabel implements MyLabel {
 	int row;
 	int col;
 	private static final long serialVersionUID = 1L;
-	static ImageIcon empty = new ImageIcon("/home/colton/otheloGameProject/Client/images/empty.gif", "empty");
+	static ImageIcon empty = new ImageIcon("images/empty.gif", "empty");
 
 	public EmptyLabel(final int row, final int col) {
 		super(empty);
@@ -211,8 +231,11 @@ class OtheloMouseListener implements MouseListener {
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
-		GameClient.getInstance().handleMakeAMove(((MyLabel) e.getSource()).getRow(),
-				((MyLabel) e.getSource()).getCol());
+		if (((JLabel) e.getSource()).getIcon().toString()
+				.equalsIgnoreCase("empty")) {
+			GameClient.getInstance().handleMakeAMove(((MyLabel) e.getSource()).getRow(),
+					((MyLabel) e.getSource()).getCol());
+		}
 	}
 
 	@Override
