@@ -80,12 +80,12 @@ class Game {
 		// TODO: First of all you should check whether player is allowed to move
 		// or not.
 		final Move move = new Move(xCoordinate, yCoordinate, player);
-		if (move.isValidMove() && current == player) {
+		if (move.isValidMove() /*&& current == player*/) {
 			board[move.x][move.y] = current;
 			current = (current == SpaceState.black) ? SpaceState.white : SpaceState.black;
 			return true;
 		} else {
-			return true;
+			return false;
 		}
 	}
 
@@ -144,8 +144,9 @@ class Game {
 
 				//East check and sum
 				ix=x; iy=y;
+                foundPiece = false;
                 while(true){
-					ix++; if(foundPiece || !((0 <= ix) && (ix <= 7)) && ((0 <= iy) && (iy <= 7)))break;
+					ix++; if(foundPiece || !((0 <= ix) && (ix <= 7)) || !((0 <= iy) && (iy <= 7)))break;
 					if(board[ix][iy] == color) {
 						foundPiece = true;
 					}
@@ -160,8 +161,77 @@ class Game {
 							board[ix][iy] = color;
 							captureSum++;
 						}
-					}while(ix != x && iy != y);
+					}while(ix != x || iy != y);
 				}
+
+                //WEST
+                ix=x; iy=y;
+                foundPiece = false;
+                while(true){
+                    ix--; if(foundPiece || !((0 <= ix) && (ix <= 7)) || !((0 <= iy) && (iy <= 7)))break;
+                    if(board[ix][iy] == color) {
+                        foundPiece = true;
+                    }
+                }
+
+                if(foundPiece)
+                {
+                    do{
+                        ix++;
+                        if(board[ix][iy] == enemycolor)
+                        {
+                            board[ix][iy] = color;
+                            captureSum++;
+                        }
+                    }while(ix != x || iy != y);
+                }
+
+                //south
+                ix=x; iy=y;
+                foundPiece = false;
+                while(true){
+                    iy++; if(foundPiece || !((0 <= ix) && (ix <= 7)) || !((0 <= iy) && (iy <= 7)))break;
+                    if(board[ix][iy] == color) {
+                        foundPiece = true;
+                    }
+                }
+
+                if(foundPiece)
+                {
+                    do{
+                        iy--;
+                        if(board[ix][iy] == enemycolor)
+                        {
+                            board[ix][iy] = color;
+                            captureSum++;
+                        }
+                    }while(ix != x || iy != y);
+                }
+
+                //North
+                ix=x; iy=y;
+                foundPiece = false;
+                while(true){
+                    iy--; if(foundPiece || !((0 <= ix) && (ix <= 7)) || !((0 <= iy) && (iy <= 7)) )break;
+                    if(board[ix][iy] == color) {
+                        foundPiece = true;
+                    }
+                }
+
+                if(foundPiece)
+                {
+                    do{
+                        iy++;
+                        if(board[ix][iy] == enemycolor)
+                        {
+                            board[ix][iy] = color;
+                            captureSum++;
+                        }
+                    }while(ix != x || iy != y);
+                }
+
+
+
 
 				if(captureSum == 0) {
 					return false;
